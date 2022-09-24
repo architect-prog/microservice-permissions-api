@@ -1,8 +1,6 @@
 using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.WebApi.Extensions.Filters;
-using Microservice.Permissions.Api.Configuration;
-using Microservice.Permissions.Api.Configuration.Interfaces;
 using Microservice.Permissions.Core.Creators;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers;
@@ -12,6 +10,7 @@ using Microservice.Permissions.Core.Services.Interfaces;
 using Microservice.Permissions.Database;
 using Microservice.Permissions.Database.Repositories;
 using Microservice.Permissions.Database.Services;
+using Microservice.Permissions.Database.Settings;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,15 +38,11 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
+builder.Services.AddDbContext<ApplicationDatabaseContext>();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
-builder.Services.AddScoped<IDatabaseSettingsProvider, DatabaseSettingsProvider>();
-builder.Services.AddScoped(x =>
-{
-    var settingsProvider = x.GetRequiredService<IDatabaseSettingsProvider>();
-    var databaseSettings = settingsProvider.DatabaseSettings;
-    return databaseSettings;
-});
+builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 
 var app = builder.Build();
 

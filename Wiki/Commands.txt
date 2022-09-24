@@ -1,0 +1,2 @@
+dotnet ef migrations add Init --project .\Microservice.Permissions.Persistence.EfCore\ --startup-project .\Microservice.Permissions.Api\
+dotnet ef database update --project .\Microservice.Permissions.Persistence.EfCore\ --startup-project .\Microservice.Permissions.Api\

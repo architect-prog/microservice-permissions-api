@@ -2,6 +2,7 @@
 using Microservice.Permissions.Database.Settings;
 using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Microservice.Permissions.Database;
 
@@ -15,9 +16,9 @@ public sealed class ApplicationDatabaseContext : DbContext
     public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
     public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
 
-    public ApplicationDatabaseContext(DatabaseSettings databaseSettings)
+    public ApplicationDatabaseContext(IOptions<DatabaseSettings> databaseSettings)
     {
-        this.databaseSettings = databaseSettings;
+        this.databaseSettings = databaseSettings.Value;
 
         ChangeTracker.LazyLoadingEnabled = false;
         ChangeTracker.AutoDetectChangesEnabled = false;
