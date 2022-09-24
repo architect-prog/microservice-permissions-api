@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Api", "Microservice.Permissions.Api\Microservice.Permissions.Api.csproj", "{791A7A56-0751-4CEA-8858-58299516294D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Core", "Microservice.Permissions.Core\Microservice.Permissions.Core.csproj", "{4EF1738A-F99C-4E3B-99D4-EA1CB06E29DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Persistence.EfCore", "Microservice.Permissions.Persistence.EfCore\Microservice.Permissions.Persistence.EfCore.csproj", "{FCB3A7C4-A910-4EF2-8EDD-841B3C0CDD51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Kernel", "Microservice.Permissions.Kernel\Microservice.Permissions.Kernel.csproj", "{B63F6428-6140-4710-BD08-E7DE5CE859DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{791A7A56-0751-4CEA-8858-58299516294D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{791A7A56-0751-4CEA-8858-58299516294D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{791A7A56-0751-4CEA-8858-58299516294D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{791A7A56-0751-4CEA-8858-58299516294D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF1738A-F99C-4E3B-99D4-EA1CB06E29DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF1738A-F99C-4E3B-99D4-EA1CB06E29DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF1738A-F99C-4E3B-99D4-EA1CB06E29DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF1738A-F99C-4E3B-99D4-EA1CB06E29DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCB3A7C4-A910-4EF2-8EDD-841B3C0CDD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB3A7C4-A910-4EF2-8EDD-841B3C0CDD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB3A7C4-A910-4EF2-8EDD-841B3C0CDD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB3A7C4-A910-4EF2-8EDD-841B3C0CDD51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
