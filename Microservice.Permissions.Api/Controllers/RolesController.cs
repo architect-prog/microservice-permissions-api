@@ -41,9 +41,9 @@ public class RolesController : ControllerBase
 
     [ProducesOk(typeof(CollectionWrapper<RoleResponse>))]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int? skip, int? take)
     {
-        var roles = await roleService.GetAll();
+        var roles = await roleService.GetAll(skip, take);
         var count = await roleService.Count();
         var result = roles.WrapCollection(count);
 

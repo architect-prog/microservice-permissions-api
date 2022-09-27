@@ -2,6 +2,6 @@
 
 public class CreateAreaRequest
 {
-    public int ApplicationId { get; set; }
+    public int ApplicationId { get; init; }
     public string? Name { get; init; }
 }

@@ -24,21 +24,26 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ResourceNotFoundException)));
 }).AddControllersAsServices();
 
-builder.Services.AddScoped<IApplicationCreator, ApplicationCreator>();
 builder.Services.AddScoped<IRoleCreator, RoleCreator>();
 builder.Services.AddScoped<IAreaCreator, AreaCreator>();
+builder.Services.AddScoped<IAreaRoleCreator, AreaRoleCreator>();
+builder.Services.AddScoped<IApplicationCreator, ApplicationCreator>();
 
-builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
 builder.Services.AddScoped<IAreaMapper, AreaMapper>();
 builder.Services.AddScoped<IRoleMapper, RoleMapper>();
+builder.Services.AddScoped<IPermissionMapper, PermissionMapper>();
+builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
+builder.Services.AddScoped<IAreaPermissionsMapper, AreaPermissionsMapper>();
 
-builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IAreaPermissionService, AreaPermissionService>();
+builder.Services.AddScoped<IAreaRoleService, AreaRoleService>();
 
-builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
-builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddDbContext<ApplicationDatabaseContext>();
+builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
+builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 

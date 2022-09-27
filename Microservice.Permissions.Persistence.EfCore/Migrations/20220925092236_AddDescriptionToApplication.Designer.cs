@@ -2,6 +2,7 @@
 using Microservice.Permissions.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Microservice.Permissions.Database.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220925092236_AddDescriptionToApplication")]
+    partial class AddDescriptionToApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,6 +83,10 @@ namespace Microservice.Permissions.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("application_id");
+
                     b.Property<int>("AreaId")
                         .HasColumnType("integer")
                         .HasColumnName("area_id");
@@ -90,15 +96,18 @@ namespace Microservice.Permissions.Database.Migrations
                         .HasColumnName("role_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_area_role_permissions");
+                        .HasName("pk_accesses");
+
+                    b.HasIndex("ApplicationId")
+                        .HasDatabaseName("ix_accesses_application_id");
 
                     b.HasIndex("AreaId")
-                        .HasDatabaseName("ix_area_role_permissions_area_id");
+                        .HasDatabaseName("ix_accesses_area_id");
 
                     b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_area_role_permissions_role_id");
+                        .HasDatabaseName("ix_accesses_role_id");
 
-                    b.ToTable("area_role_permissions", (string)null);
+                    b.ToTable("accesses", (string)null);
                 });
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionEntity", b =>
@@ -166,19 +175,28 @@ namespace Microservice.Permissions.Database.Migrations
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.AreaRolePermissionsEntity", b =>
                 {
+                    b.HasOne("Microservice.Permissions.Kernel.Entities.ApplicationEntity", "Application")
+                        .WithMany("AreaRolePermissions")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_accesses_applications_application_id");
+
                     b.HasOne("Microservice.Permissions.Kernel.Entities.AreaEntity", "Area")
                         .WithMany("AreaRolePermissions")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_area_role_permissions_areas_area_id");
+                        .HasConstraintName("fk_accesses_areas_area_id");
 
                     b.HasOne("Microservice.Permissions.Kernel.Entities.RoleEntity", "Role")
                         .WithMany("AreaRolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_area_role_permissions_roles_role_id");
+                        .HasConstraintName("fk_accesses_roles_role_id");
+
+                    b.Navigation("Application");
 
                     b.Navigation("Area");
 
@@ -192,13 +210,15 @@ namespace Microservice.Permissions.Database.Migrations
                         .HasForeignKey("AreaRolePermissionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permissions_area_role_permissions_area_role_permissions_id");
+                        .HasConstraintName("fk_permissions_accesses_area_role_permissions_id");
 
                     b.Navigation("AreaRolePermissions");
                 });
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.ApplicationEntity", b =>
                 {
+                    b.Navigation("AreaRolePermissions");
+
                     b.Navigation("Areas");
                 });
 

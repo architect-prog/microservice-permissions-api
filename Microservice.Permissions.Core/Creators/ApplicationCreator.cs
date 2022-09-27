@@ -10,7 +10,8 @@ public class ApplicationCreator : IApplicationCreator
     {
         var result = new ApplicationEntity
         {
-            Name = request.Name
+            Name = request.Name,
+            Description = request.Description
         };
 
         return result;

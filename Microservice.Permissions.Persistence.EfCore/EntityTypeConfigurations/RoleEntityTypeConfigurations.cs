@@ -9,6 +9,9 @@ public sealed class RoleEntityTypeConfigurations : IEntityTypeConfiguration<Role
     public void Configure(EntityTypeBuilder<RoleEntity> builder)
     {
         builder.Property(x => x.Name).HasMaxLength(64);
-        builder.HasMany(x => x.Accesses).WithOne(x => x.Role).OnDelete(DeleteBehavior.Cascade);
+        builder
+            .HasMany(x => x.AreaRolePermissions)
+            .WithOne(x => x.Role)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

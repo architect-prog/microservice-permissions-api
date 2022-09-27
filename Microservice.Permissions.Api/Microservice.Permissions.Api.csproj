@@ -8,13 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ArchitectProg.WebApi.Extensions" Version="1.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="ArchitectProg.WebApi.Extensions" Version="1.0.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Microservice.Permissions.Core\Microservice.Permissions.Core.csproj" />
-      <ProjectReference Include="..\Microservice.Permissions.Persistence.EfCore\Microservice.Permissions.Persistence.EfCore.csproj" />
+        <ProjectReference Include="..\Microservice.Permissions.Core\Microservice.Permissions.Core.csproj"/>
     </ItemGroup>
 
 </Project>

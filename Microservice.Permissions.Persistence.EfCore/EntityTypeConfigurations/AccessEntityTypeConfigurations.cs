@@ -4,23 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Microservice.Permissions.Database.EntityTypeConfigurations;
 
-public sealed class AccessEntityTypeConfigurations : IEntityTypeConfiguration<AccessEntity>
+public sealed class AccessEntityTypeConfigurations : IEntityTypeConfiguration<AreaRolePermissionsEntity>
 {
-    public void Configure(EntityTypeBuilder<AccessEntity> builder)
+    public void Configure(EntityTypeBuilder<AreaRolePermissionsEntity> builder)
     {
         builder
             .HasOne(x => x.Area)
-            .WithMany(x => x.Accesses)
+            .WithMany(x => x.AreaRolePermissions)
             .HasForeignKey(x => x.AreaId)
             .OnDelete(DeleteBehavior.Cascade);
         builder
-            .HasOne(x => x.Application)
-            .WithMany(x => x.Accesses)
-            .HasForeignKey(x => x.ApplicationId)
-            .OnDelete(DeleteBehavior.Cascade);
-        builder
             .HasOne(x => x.Role)
-            .WithMany(x => x.Accesses)
+            .WithMany(x => x.AreaRolePermissions)
             .HasForeignKey(x => x.RoleId)
             .OnDelete(DeleteBehavior.Cascade);
     }

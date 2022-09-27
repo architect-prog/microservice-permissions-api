@@ -14,17 +14,20 @@ public class RoleService : IRoleService
 {
     private readonly IRoleCreator roleCreator;
     private readonly IRoleMapper roleMapper;
+    private readonly IAreaRoleService areaRoleService;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<RoleEntity> repository;
 
     public RoleService(
         IRoleCreator roleCreator,
         IRoleMapper roleMapper,
+        IAreaRoleService areaRoleService,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<RoleEntity> repository)
     {
         this.roleCreator = roleCreator;
         this.roleMapper = roleMapper;
+        this.areaRoleService = areaRoleService;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.repository = repository;
     }
@@ -35,6 +38,8 @@ public class RoleService : IRoleService
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Add(role);
+            await areaRoleService.CreateForRole(role.Id);
+            await transaction.Commit();
         }
 
         var result = role.Id;
@@ -54,9 +59,10 @@ public class RoleService : IRoleService
         return result;
     }
 
-    public async Task<IEnumerable<RoleResponse>> GetAll()
+    public async Task<IEnumerable<RoleResponse>> GetAll(int? skip = null, int? take = null)
     {
-        var roles = await repository.List(SpecificationFactory.AllSpecification<RoleEntity>());
+        var roles = await repository
+            .List(SpecificationFactory.AllSpecification<RoleEntity>(), skip, take);
 
         var result = roleMapper.MapCollection(roles);
         return result;
@@ -75,6 +81,7 @@ public class RoleService : IRoleService
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Update(role);
+            await transaction.Commit();
         }
 
         return ResultFactory.Success();

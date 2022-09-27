@@ -3,6 +3,7 @@ using ArchitectProg.WebApi.Extensions.Extensions;
 using ArchitectProg.WebApi.Extensions.Responses;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
+using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,14 @@ namespace Microservice.Permissions.Api.Controllers;
 public class AreasController : ControllerBase
 {
     private readonly IAreaService areaService;
+    private readonly IAreaPermissionService areaPermissionService;
 
-    public AreasController(IAreaService areaService)
+    public AreasController(
+        IAreaService areaService,
+        IAreaPermissionService areaPermissionService)
     {
         this.areaService = areaService;
+        this.areaPermissionService = areaPermissionService;
     }
 
     [ProducesBadRequest]
@@ -41,9 +46,9 @@ public class AreasController : ControllerBase
 
     [ProducesOk(typeof(CollectionWrapper<AreaResponse>))]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int? applicationId, int? skip, int? take)
     {
-        var areas = await areaService.GetAll();
+        var areas = await areaService.GetAll(applicationId, skip, take);
         var count = await areaService.Count();
         var result = areas.WrapCollection(count);
 
@@ -71,5 +76,13 @@ public class AreasController : ControllerBase
         var response = result.Match<IActionResult>(() => NoContent(), x => NotFound(x?.Message));
 
         return response;
+    }
+
+    [ProducesOk(typeof(IEnumerable<AreaPermissionsResponse>))]
+    [HttpGet("{areaId:int}/permissions")]
+    public async Task<IActionResult> Permissions(int areaId, int? roleId)
+    {
+        var permissions = await areaPermissionService.GetAreaPermissions(areaId, roleId);
+        return Ok(permissions);
     }
 }

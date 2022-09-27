@@ -10,9 +10,9 @@ public sealed class PermissionEntityTypeConfigurations : IEntityTypeConfiguratio
     {
         builder.Property(x => x.Name).HasMaxLength(32);
         builder
-            .HasOne(x => x.Access)
+            .HasOne(x => x.AreaRolePermissions)
             .WithMany(x => x.Permissions)
-            .HasForeignKey(x => x.AccessId)
+            .HasForeignKey(x => x.AreaRolePermissionsId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

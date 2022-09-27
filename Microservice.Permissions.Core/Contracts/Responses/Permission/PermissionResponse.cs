@@ -2,7 +2,6 @@
 
 public class PermissionResponse
 {
-    public int Id { get; init; }
-    public string? Name { get; set; }
-    public bool HaveAccess { get; set; }
+    public string? Name { get; init; }
+    public bool HaveAccess { get; init; }
 }

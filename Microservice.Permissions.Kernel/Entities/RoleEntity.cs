@@ -6,5 +6,5 @@ public class RoleEntity : Entity<int>
 {
     public string? Name { get; set; }
 
-    public IEnumerable<AccessEntity>? Accesses { get; set; }
+    public IEnumerable<AreaRolePermissionsEntity>? AreaRolePermissions { get; set; }
 }

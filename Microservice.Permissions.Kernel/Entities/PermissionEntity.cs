@@ -7,6 +7,6 @@ public class PermissionEntity : Entity<int>
     public string? Name { get; set; }
     public bool HaveAccess { get; set; }
 
-    public int AccessId { get; set; }
-    public AccessEntity Access { get; set; }
+    public int AreaRolePermissionsId { get; set; }
+    public AreaRolePermissionsEntity? AreaRolePermissions { get; set; }
 }

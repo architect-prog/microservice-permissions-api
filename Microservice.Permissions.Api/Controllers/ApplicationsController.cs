@@ -41,9 +41,9 @@ public class ApplicationsController : ControllerBase
 
     [ProducesOk(typeof(CollectionWrapper<ApplicationResponse>))]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int? skip, int? take)
     {
-        var applications = await applicationService.GetAll();
+        var applications = await applicationService.GetAll(skip, take);
         var count = await applicationService.Count();
         var result = applications.WrapCollection(count);
 

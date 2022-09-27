@@ -7,27 +7,38 @@ namespace Microservice.Permissions.Database.Services;
 
 public sealed class UnitOfWork : IUnitOfWork
 {
+    private readonly bool isNestedTransaction;
     private readonly IDbContextTransaction transaction;
 
-    public UnitOfWork(DbContext applicationDatabaseContext)
+    public UnitOfWork(DbContext context)
     {
-        var currentTransaction = applicationDatabaseContext.Database.CurrentTransaction;
-        transaction = currentTransaction
-                      ?? applicationDatabaseContext.Database.BeginTransaction(IsolationLevel.ReadCommitted);
+        var currentTransaction = context.Database.CurrentTransaction;
+
+        isNestedTransaction = currentTransaction is not null;
+        transaction = currentTransaction ?? context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
     }
 
     public async Task Commit()
     {
+        if (isNestedTransaction)
+            return;
+
         await transaction.CommitAsync();
     }
 
     public async Task Rollback()
     {
+        if (isNestedTransaction)
+            return;
+
         await transaction.RollbackAsync();
     }
 
     public void Dispose()
     {
+        if (isNestedTransaction)
+            return;
+
         transaction.Dispose();
     }
 }

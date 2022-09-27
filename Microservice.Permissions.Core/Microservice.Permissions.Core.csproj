@@ -8,10 +8,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Microservice.Permissions.Kernel\Microservice.Permissions.Kernel.csproj" />
+      <ProjectReference Include="..\Microservice.Permissions.Persistence.EfCore\Microservice.Permissions.Persistence.EfCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Constants" />
       <Folder Include="Contracts" />
     </ItemGroup>
 

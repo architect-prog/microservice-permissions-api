@@ -6,6 +6,7 @@ using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
+using Microservice.Permissions.Database.Specifications;
 using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services;
@@ -14,17 +15,20 @@ public class AreaService : IAreaService
 {
     private readonly IAreaCreator areaCreator;
     private readonly IAreaMapper areaMapper;
+    private readonly IAreaRoleService areaRoleService;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<AreaEntity> repository;
 
     public AreaService(
         IAreaCreator areaCreator,
         IAreaMapper areaMapper,
+        IAreaRoleService areaRoleService,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<AreaEntity> repository)
     {
         this.areaCreator = areaCreator;
         this.areaMapper = areaMapper;
+        this.areaRoleService = areaRoleService;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.repository = repository;
     }
@@ -35,6 +39,8 @@ public class AreaService : IAreaService
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Add(area);
+            await areaRoleService.CreateForArea(area.Id);
+            await transaction.Commit();
         }
 
         var result = area.Id;
@@ -54,9 +60,12 @@ public class AreaService : IAreaService
         return result;
     }
 
-    public async Task<IEnumerable<AreaResponse>> GetAll()
+    public async Task<IEnumerable<AreaResponse>> GetAll(int? applicationId, int? skip, int? take)
     {
-        var areas = await repository.List(SpecificationFactory.AllSpecification<AreaEntity>());
+        var specification = applicationId.HasValue
+            ? new ApplicationAreasSpecification(applicationId.Value)
+            : SpecificationFactory.AllSpecification<AreaEntity>();
+        var areas = await repository.List(specification, skip, take);
 
         var result = areaMapper.MapCollection(areas);
         return result;
@@ -75,6 +84,7 @@ public class AreaService : IAreaService
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Update(area);
+            await transaction.Commit();
         }
 
         return ResultFactory.Success();

@@ -12,7 +12,7 @@ public sealed class ApplicationDatabaseContext : DbContext
 
     public DbSet<AreaEntity> Areas => Set<AreaEntity>();
     public DbSet<RoleEntity> Roles => Set<RoleEntity>();
-    public DbSet<AccessEntity> Accesses => Set<AccessEntity>();
+    public DbSet<AreaRolePermissionsEntity> AreaRolePermissions => Set<AreaRolePermissionsEntity>();
     public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
     public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
 

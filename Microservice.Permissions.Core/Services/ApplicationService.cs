@@ -35,6 +35,7 @@ public class ApplicationService : IApplicationService
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Add(application);
+            await transaction.Commit();
         }
 
         var result = application.Id;
@@ -54,9 +55,10 @@ public class ApplicationService : IApplicationService
         return result;
     }
 
-    public async Task<IEnumerable<ApplicationResponse>> GetAll()
+    public async Task<IEnumerable<ApplicationResponse>> GetAll(int? skip, int? take)
     {
-        var applications = await repository.List(SpecificationFactory.AllSpecification<ApplicationEntity>());
+        var applications = await repository
+            .List(SpecificationFactory.AllSpecification<ApplicationEntity>(), skip, take);
 
         var result = applicationMapper.MapCollection(applications);
         return result;
@@ -72,9 +74,11 @@ public class ApplicationService : IApplicationService
         }
 
         application.Name = request.Name;
+        application.Description = request.Description;
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
             await repository.Update(application);
+            await transaction.Commit();
         }
 
         return ResultFactory.Success();

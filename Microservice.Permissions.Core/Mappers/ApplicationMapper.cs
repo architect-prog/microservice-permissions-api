@@ -12,7 +12,8 @@ public class ApplicationMapper : Mapper<ApplicationEntity, ApplicationResponse>,
         var result = new ApplicationResponse
         {
             Id = source.Id,
-            Name = source.Name
+            Name = source.Name,
+            Description = source.Description
         };
 
         return result;

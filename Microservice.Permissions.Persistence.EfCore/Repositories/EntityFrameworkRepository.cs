@@ -6,45 +6,43 @@ namespace Microservice.Permissions.Database.Repositories;
 
 public sealed class EntityFrameworkRepository<T> : IRepository<T> where T : class
 {
+    private readonly DbContext context;
     private readonly DbSet<T> entitiesSet;
 
-    public EntityFrameworkRepository(DbContext dbContext)
+    public EntityFrameworkRepository(DbContext context)
     {
-        entitiesSet = dbContext.Set<T>();
+        this.context = context;
+        entitiesSet = context.Set<T>();
     }
 
     public async Task Add(T entity)
     {
-        if (entity is null)
-            throw new ArgumentNullException(nameof(entity));
-
         await entitiesSet.AddAsync(entity);
+        await context.SaveChangesAsync();
     }
 
     public async Task AddRange(IEnumerable<T> entities)
     {
-        if (entities is null)
-            throw new ArgumentNullException(nameof(entities));
-
         await entitiesSet.AddRangeAsync(entities);
+        await context.SaveChangesAsync();
     }
 
     public Task Update(T entity)
     {
         entitiesSet.Update(entity);
-        return Task.CompletedTask;
+        return context.SaveChangesAsync();
     }
 
     public Task UpdateRange(IEnumerable<T> entities)
     {
         entitiesSet.UpdateRange(entities);
-        return Task.CompletedTask;
+        return context.SaveChangesAsync();
     }
 
     public Task Delete(T entity)
     {
         entitiesSet.Remove(entity);
-        return Task.CompletedTask;
+        return context.SaveChangesAsync();
     }
 
     public Task<int> Count(ISpecification<T> specification)

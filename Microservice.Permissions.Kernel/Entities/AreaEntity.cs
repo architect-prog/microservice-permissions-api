@@ -8,5 +8,5 @@ public class AreaEntity : Entity<int>
 
     public int ApplicationId { get; set; }
     public ApplicationEntity? Application { get; set; }
-    public IEnumerable<AccessEntity>? Accesses { get; set; }
+    public IEnumerable<AreaRolePermissionsEntity>? AreaRolePermissions { get; set; }
 }
