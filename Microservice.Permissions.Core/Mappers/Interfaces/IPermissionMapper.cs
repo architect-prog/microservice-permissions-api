@@ -2,8 +2,9 @@
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Mappers.Interfaces;
-
-public interface IPermissionMapper : IMapper<PermissionEntity, PermissionResponse>
+namespace Microservice.Permissions.Core.Mappers.Interfaces
 {
+    public interface IPermissionMapper : IMapper<PermissionEntity, PermissionResponse>
+    {
+    }
 }

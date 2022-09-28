@@ -1,7 +1,8 @@
-﻿namespace Microservice.Permissions.Core.Contracts.Requests.Area;
-
-public class CreateAreaRequest
+﻿namespace Microservice.Permissions.Core.Contracts.Requests.Area
 {
-    public int ApplicationId { get; init; }
-    public string? Name { get; init; }
+    public class CreateAreaRequest
+    {
+        public int ApplicationId { get; init; }
+        public string? Name { get; init; }
+    }
 }

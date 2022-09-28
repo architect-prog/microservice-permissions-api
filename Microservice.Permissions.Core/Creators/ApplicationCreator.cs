@@ -2,18 +2,19 @@
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Creators;
-
-public class ApplicationCreator : IApplicationCreator
+namespace Microservice.Permissions.Core.Creators
 {
-    public ApplicationEntity Create(CreateApplicationRequest request)
+    public class ApplicationCreator : IApplicationCreator
     {
-        var result = new ApplicationEntity
+        public ApplicationEntity Create(CreateApplicationRequest request)
         {
-            Name = request.Name,
-            Description = request.Description
-        };
+            var result = new ApplicationEntity
+            {
+                Name = request.Name,
+                Description = request.Description
+            };
 
-        return result;
+            return result;
+        }
     }
 }

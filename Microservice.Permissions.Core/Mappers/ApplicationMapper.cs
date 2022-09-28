@@ -3,19 +3,20 @@ using Microservice.Permissions.Core.Contracts.Responses.Application;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Mappers;
-
-public class ApplicationMapper : Mapper<ApplicationEntity, ApplicationResponse>, IApplicationMapper
+namespace Microservice.Permissions.Core.Mappers
 {
-    public override ApplicationResponse Map(ApplicationEntity source)
+    public class ApplicationMapper : Mapper<ApplicationEntity, ApplicationResponse>, IApplicationMapper
     {
-        var result = new ApplicationResponse
+        public override ApplicationResponse Map(ApplicationEntity source)
         {
-            Id = source.Id,
-            Name = source.Name,
-            Description = source.Description
-        };
+            var result = new ApplicationResponse
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Description = source.Description
+            };
 
-        return result;
+            return result;
+        }
     }
 }

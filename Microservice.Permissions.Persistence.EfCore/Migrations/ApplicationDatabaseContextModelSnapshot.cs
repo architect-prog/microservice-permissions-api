@@ -42,6 +42,10 @@ namespace Microservice.Permissions.Database.Migrations
                     b.HasKey("Id")
                         .HasName("pk_applications");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_applications_name");
+
                     b.ToTable("applications", (string)null);
                 });
 
@@ -66,8 +70,9 @@ namespace Microservice.Permissions.Database.Migrations
                     b.HasKey("Id")
                         .HasName("pk_areas");
 
-                    b.HasIndex("ApplicationId")
-                        .HasDatabaseName("ix_areas_application_id");
+                    b.HasIndex("ApplicationId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_areas_application_id_name");
 
                     b.ToTable("areas", (string)null);
                 });
@@ -126,8 +131,9 @@ namespace Microservice.Permissions.Database.Migrations
                     b.HasKey("Id")
                         .HasName("pk_permissions");
 
-                    b.HasIndex("AreaRolePermissionsId")
-                        .HasDatabaseName("ix_permissions_area_role_permissions_id");
+                    b.HasIndex("AreaRolePermissionsId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permissions_area_role_permissions_id_name");
 
                     b.ToTable("permissions", (string)null);
                 });
@@ -148,6 +154,10 @@ namespace Microservice.Permissions.Database.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_roles");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_roles_name");
 
                     b.ToTable("roles", (string)null);
                 });

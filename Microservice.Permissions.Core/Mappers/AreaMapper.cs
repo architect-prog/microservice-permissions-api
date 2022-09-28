@@ -3,19 +3,20 @@ using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Mappers;
-
-public class AreaMapper : Mapper<AreaEntity, AreaResponse>, IAreaMapper
+namespace Microservice.Permissions.Core.Mappers
 {
-    public override AreaResponse Map(AreaEntity source)
+    public class AreaMapper : Mapper<AreaEntity, AreaResponse>, IAreaMapper
     {
-        var result = new AreaResponse
+        public override AreaResponse Map(AreaEntity source)
         {
-            Id = source.Id,
-            ApplicationId = source.ApplicationId,
-            Name = source.Name
-        };
+            var result = new AreaResponse
+            {
+                Id = source.Id,
+                ApplicationId = source.ApplicationId,
+                Name = source.Name
+            };
 
-        return result;
+            return result;
+        }
     }
 }

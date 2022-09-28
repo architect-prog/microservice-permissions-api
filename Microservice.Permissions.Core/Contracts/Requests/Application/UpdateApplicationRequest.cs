@@ -1,7 +1,8 @@
-﻿namespace Microservice.Permissions.Core.Contracts.Requests.Application;
-
-public class UpdateApplicationRequest
+﻿namespace Microservice.Permissions.Core.Contracts.Requests.Application
 {
-    public string? Name { get; init; }
-    public string? Description { get; init; }
+    public class UpdateApplicationRequest
+    {
+        public string? Name { get; init; }
+        public string? Description { get; init; }
+    }
 }

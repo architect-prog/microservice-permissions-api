@@ -1,7 +1,8 @@
-﻿namespace Microservice.Permissions.Core.Contracts.Responses.Role;
-
-public class RoleResponse
+﻿namespace Microservice.Permissions.Core.Contracts.Responses.Role
 {
-    public int Id { get; init; }
-    public string? Name { get; init; }
+    public class RoleResponse
+    {
+        public int Id { get; init; }
+        public string? Name { get; init; }
+    }
 }

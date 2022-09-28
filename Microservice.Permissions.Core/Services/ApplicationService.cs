@@ -8,98 +8,99 @@ using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Services;
-
-public class ApplicationService : IApplicationService
+namespace Microservice.Permissions.Core.Services
 {
-    private readonly IApplicationCreator applicationCreator;
-    private readonly IApplicationMapper applicationMapper;
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-    private readonly IRepository<ApplicationEntity> repository;
-
-    public ApplicationService(
-        IApplicationCreator applicationCreator,
-        IApplicationMapper applicationMapper,
-        IUnitOfWorkFactory unitOfWorkFactory,
-        IRepository<ApplicationEntity> repository)
+    public sealed class ApplicationService : IApplicationService
     {
-        this.applicationCreator = applicationCreator;
-        this.applicationMapper = applicationMapper;
-        this.unitOfWorkFactory = unitOfWorkFactory;
-        this.repository = repository;
-    }
+        private readonly IApplicationCreator applicationCreator;
+        private readonly IApplicationMapper applicationMapper;
+        private readonly IUnitOfWorkFactory unitOfWorkFactory;
+        private readonly IRepository<ApplicationEntity> repository;
 
-    public async Task<int> Create(CreateApplicationRequest request)
-    {
-        var application = applicationCreator.Create(request);
-        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        public ApplicationService(
+            IApplicationCreator applicationCreator,
+            IApplicationMapper applicationMapper,
+            IUnitOfWorkFactory unitOfWorkFactory,
+            IRepository<ApplicationEntity> repository)
         {
-            await repository.Add(application);
-            await transaction.Commit();
+            this.applicationCreator = applicationCreator;
+            this.applicationMapper = applicationMapper;
+            this.unitOfWorkFactory = unitOfWorkFactory;
+            this.repository = repository;
         }
 
-        var result = application.Id;
-        return result;
-    }
-
-    public async Task<Result<ApplicationResponse>> Get(int applicationId)
-    {
-        var application = await repository.GetOrDefault(applicationId);
-        if (application is null)
+        public async Task<Result<int>> Create(CreateApplicationRequest request)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<ApplicationResponse>(nameof(application));
-            return failureResult;
+            var application = applicationCreator.Create(request);
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.Add(application);
+                await transaction.Commit();
+            }
+
+            var result = application.Id;
+            return result;
         }
 
-        var result = applicationMapper.Map(application);
-        return result;
-    }
-
-    public async Task<IEnumerable<ApplicationResponse>> GetAll(int? skip, int? take)
-    {
-        var applications = await repository
-            .List(SpecificationFactory.AllSpecification<ApplicationEntity>(), skip, take);
-
-        var result = applicationMapper.MapCollection(applications);
-        return result;
-    }
-
-    public async Task<Result> Update(int applicationId, UpdateApplicationRequest request)
-    {
-        var application = await repository.GetOrDefault(applicationId);
-        if (application is null)
+        public async Task<Result<ApplicationResponse>> Get(int applicationId)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
-            return failureResult;
+            var application = await repository.GetOrDefault(applicationId);
+            if (application is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure<ApplicationResponse>(nameof(application));
+                return failureResult;
+            }
+
+            var result = applicationMapper.Map(application);
+            return result;
         }
 
-        application.Name = request.Name;
-        application.Description = request.Description;
-        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        public async Task<Result<IEnumerable<ApplicationResponse>>> GetAll(int? skip, int? take)
         {
-            await repository.Update(application);
-            await transaction.Commit();
+            var applications = await repository
+                .List(SpecificationFactory.AllSpecification<ApplicationEntity>(), skip, take);
+
+            var result = applicationMapper.MapCollection(applications).ToArray();
+            return result;
         }
 
-        return ResultFactory.Success();
-    }
-
-    public async Task<Result> Delete(int applicationId)
-    {
-        var application = await repository.GetOrDefault(applicationId);
-        if (application is null)
+        public async Task<Result> Update(int applicationId, UpdateApplicationRequest request)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
-            return failureResult;
+            var application = await repository.GetOrDefault(applicationId);
+            if (application is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
+                return failureResult;
+            }
+
+            application.Name = request.Name;
+            application.Description = request.Description;
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.Update(application);
+                await transaction.Commit();
+            }
+
+            return ResultFactory.Success();
         }
 
-        await repository.Delete(application);
-        return ResultFactory.Success();
-    }
+        public async Task<Result> Delete(int applicationId)
+        {
+            var application = await repository.GetOrDefault(applicationId);
+            if (application is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
+                return failureResult;
+            }
 
-    public Task<int> Count()
-    {
-        var result = repository.Count(SpecificationFactory.AllSpecification<ApplicationEntity>());
-        return result;
+            await repository.Delete(application);
+            return ResultFactory.Success();
+        }
+
+        public Task<int> Count()
+        {
+            var result = repository.Count(SpecificationFactory.AllSpecification<ApplicationEntity>());
+            return result;
+        }
     }
 }

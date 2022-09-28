@@ -2,16 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Microservice.Permissions.Database.EntityTypeConfigurations;
-
-public sealed class RoleEntityTypeConfigurations : IEntityTypeConfiguration<RoleEntity>
+namespace Microservice.Permissions.Database.EntityTypeConfigurations
 {
-    public void Configure(EntityTypeBuilder<RoleEntity> builder)
+    public sealed class RoleEntityTypeConfigurations : IEntityTypeConfiguration<RoleEntity>
     {
-        builder.Property(x => x.Name).HasMaxLength(64);
-        builder
-            .HasMany(x => x.AreaRolePermissions)
-            .WithOne(x => x.Role)
-            .OnDelete(DeleteBehavior.Cascade);
+        public void Configure(EntityTypeBuilder<RoleEntity> builder)
+        {
+            builder.Property(x => x.Name).HasMaxLength(64);
+            builder.HasIndex(x => x.Name).IsUnique();
+
+            builder
+                .HasMany(x => x.AreaRolePermissions)
+                .WithOne(x => x.Role)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

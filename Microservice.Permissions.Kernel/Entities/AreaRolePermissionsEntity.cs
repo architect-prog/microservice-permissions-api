@@ -1,12 +1,13 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 
-namespace Microservice.Permissions.Kernel.Entities;
-
-public class AreaRolePermissionsEntity : Entity<int>
+namespace Microservice.Permissions.Kernel.Entities
 {
-    public int AreaId { get; set; }
-    public AreaEntity? Area { get; set; }
-    public int RoleId { get; set; }
-    public RoleEntity? Role { get; set; }
-    public IEnumerable<PermissionEntity>? Permissions { get; set; }
+    public class AreaRolePermissionsEntity : Entity<int>
+    {
+        public int AreaId { get; set; }
+        public AreaEntity? Area { get; set; }
+        public int RoleId { get; set; }
+        public RoleEntity? Role { get; set; }
+        public IEnumerable<PermissionEntity>? Permissions { get; set; }
+    }
 }

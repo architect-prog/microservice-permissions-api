@@ -1,75 +1,80 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
 using ArchitectProg.WebApi.Extensions.Extensions;
 using ArchitectProg.WebApi.Extensions.Responses;
+using Microservice.Permissions.Api.Extensions;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Microservice.Permissions.Api.Controllers;
-
-[ApiController]
-[Route("api/roles")]
-public class RolesController : ControllerBase
+namespace Microservice.Permissions.Api.Controllers
 {
-    private readonly IRoleService roleService;
-
-    public RolesController(IRoleService roleService)
+    [ApiController]
+    [Route("api/roles")]
+    public class RolesController : ControllerBase
     {
-        this.roleService = roleService;
-    }
+        private readonly IRoleService roleService;
 
-    [ProducesBadRequest]
-    [ProducesCreated(typeof(int))]
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateRoleRequest request)
-    {
-        var result = await roleService.Create(request);
-        return CreatedAtAction("Get", new {RoleId = result}, result);
-    }
+        public RolesController(IRoleService roleService)
+        {
+            this.roleService = roleService;
+        }
 
-    [ProducesNotFound]
-    [ProducesOk(typeof(RoleResponse))]
-    [HttpGet("{roleId:int}")]
-    public async Task<IActionResult> Get(int roleId)
-    {
-        var result = await roleService.Get(roleId);
-        var response = result.Match<IActionResult>(x => Ok(x), x => NotFound(x?.Message));
+        [ProducesBadRequest]
+        [ProducesCreated(typeof(int))]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateRoleRequest request)
+        {
+            var result = await roleService.Create(request);
+            var response = result.MatchActionResult(x => CreatedAtAction("Get", new {RoleId = x}, x));
 
-        return response;
-    }
+            return response;
+        }
 
-    [ProducesOk(typeof(CollectionWrapper<RoleResponse>))]
-    [HttpGet]
-    public async Task<IActionResult> GetAll(int? skip, int? take)
-    {
-        var roles = await roleService.GetAll(skip, take);
-        var count = await roleService.Count();
-        var result = roles.WrapCollection(count);
+        [ProducesNotFound]
+        [ProducesOk(typeof(RoleResponse))]
+        [HttpGet("{roleId:int}")]
+        public async Task<IActionResult> Get(int roleId)
+        {
+            var result = await roleService.Get(roleId);
+            var response = result.MatchActionResult(x => Ok(x));
 
-        return Ok(result);
-    }
+            return response;
+        }
 
-    [ProducesNotFound]
-    [ProducesNoContent]
-    [ProducesBadRequest]
-    [HttpPut("{roleId:int}")]
-    public async Task<IActionResult> Update(int roleId, UpdateRoleRequest request)
-    {
-        var result = await roleService.Update(roleId, request);
-        var response = result.Match<IActionResult>(() => NoContent(), x => NotFound(x?.Message));
+        [ProducesBadRequest]
+        [ProducesOk(typeof(CollectionWrapper<RoleResponse>))]
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int? skip, int? take)
+        {
+            var result = await roleService.GetAll(skip, take);
+            var count = await roleService.Count();
 
-        return response;
-    }
+            var response = result.MatchActionResult(x => Ok(x?.WrapCollection(count)));
+            return response;
+        }
 
-    [ProducesNotFound]
-    [ProducesNoContent]
-    [HttpDelete("{roleId:int}")]
-    public async Task<IActionResult> Delete(int roleId)
-    {
-        var result = await roleService.Delete(roleId);
-        var response = result.Match<IActionResult>(() => NoContent(), x => NotFound(x?.Message));
+        [ProducesNotFound]
+        [ProducesNoContent]
+        [ProducesBadRequest]
+        [HttpPut("{roleId:int}")]
+        public async Task<IActionResult> Update(int roleId, UpdateRoleRequest request)
+        {
+            var result = await roleService.Update(roleId, request);
+            var response = result.MatchActionResult(() => NoContent());
 
-        return response;
+            return response;
+        }
+
+        [ProducesNotFound]
+        [ProducesNoContent]
+        [HttpDelete("{roleId:int}")]
+        public async Task<IActionResult> Delete(int roleId)
+        {
+            var result = await roleService.Delete(roleId);
+            var response = result.MatchActionResult(() => NoContent());
+
+            return response;
+        }
     }
 }

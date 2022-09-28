@@ -1,11 +1,12 @@
 ﻿using ArchitectProg.Kernel.Extensions.Interfaces;
 
-namespace Microservice.Permissions.Kernel.Extensions;
-
-public static class SpecificationExtensions
+namespace Microservice.Permissions.Kernel.Extensions
 {
-    public static ISpecification<T> AsSpecification<T>(this ISpecification<T> source)
+    public static class SpecificationExtensions
     {
-        return source;
+        public static ISpecification<T> AsSpecification<T>(this ISpecification<T> source)
+        {
+            return source;
+        }
     }
 }

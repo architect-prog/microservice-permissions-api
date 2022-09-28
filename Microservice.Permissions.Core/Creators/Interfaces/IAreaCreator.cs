@@ -1,9 +1,10 @@
 ﻿using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Creators.Interfaces;
-
-public interface IAreaCreator
+namespace Microservice.Permissions.Core.Creators.Interfaces
 {
-    AreaEntity Create(CreateAreaRequest request);
+    public interface IAreaCreator
+    {
+        AreaEntity Create(CreateAreaRequest request);
+    }
 }

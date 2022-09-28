@@ -1,9 +1,10 @@
 ﻿using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Creators.Interfaces;
-
-public interface IApplicationCreator
+namespace Microservice.Permissions.Core.Creators.Interfaces
 {
-    ApplicationEntity Create(CreateApplicationRequest request);
+    public interface IApplicationCreator
+    {
+        ApplicationEntity Create(CreateApplicationRequest request);
+    }
 }

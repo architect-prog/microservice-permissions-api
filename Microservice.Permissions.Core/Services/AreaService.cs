@@ -6,106 +6,107 @@ using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Database.Specifications;
+using Microservice.Permissions.Database.Specifications.Area;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Services;
-
-public class AreaService : IAreaService
+namespace Microservice.Permissions.Core.Services
 {
-    private readonly IAreaCreator areaCreator;
-    private readonly IAreaMapper areaMapper;
-    private readonly IAreaRoleService areaRoleService;
-    private readonly IUnitOfWorkFactory unitOfWorkFactory;
-    private readonly IRepository<AreaEntity> repository;
-
-    public AreaService(
-        IAreaCreator areaCreator,
-        IAreaMapper areaMapper,
-        IAreaRoleService areaRoleService,
-        IUnitOfWorkFactory unitOfWorkFactory,
-        IRepository<AreaEntity> repository)
+    public class AreaService : IAreaService
     {
-        this.areaCreator = areaCreator;
-        this.areaMapper = areaMapper;
-        this.areaRoleService = areaRoleService;
-        this.unitOfWorkFactory = unitOfWorkFactory;
-        this.repository = repository;
-    }
+        private readonly IAreaCreator areaCreator;
+        private readonly IAreaMapper areaMapper;
+        private readonly IAreaRoleService areaRoleService;
+        private readonly IUnitOfWorkFactory unitOfWorkFactory;
+        private readonly IRepository<AreaEntity> repository;
 
-    public async Task<int> Create(CreateAreaRequest request)
-    {
-        var area = areaCreator.Create(request);
-        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        public AreaService(
+            IAreaCreator areaCreator,
+            IAreaMapper areaMapper,
+            IAreaRoleService areaRoleService,
+            IUnitOfWorkFactory unitOfWorkFactory,
+            IRepository<AreaEntity> repository)
         {
-            await repository.Add(area);
-            await areaRoleService.CreateForArea(area.Id);
-            await transaction.Commit();
+            this.areaCreator = areaCreator;
+            this.areaMapper = areaMapper;
+            this.areaRoleService = areaRoleService;
+            this.unitOfWorkFactory = unitOfWorkFactory;
+            this.repository = repository;
         }
 
-        var result = area.Id;
-        return result;
-    }
-
-    public async Task<Result<AreaResponse>> Get(int areaId)
-    {
-        var area = await repository.GetOrDefault(areaId);
-        if (area is null)
+        public async Task<Result<int>> Create(CreateAreaRequest request)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<AreaResponse>(nameof(area));
-            return failureResult;
+            var area = areaCreator.Create(request);
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.Add(area);
+                await areaRoleService.CreateForArea(area.Id);
+                await transaction.Commit();
+            }
+
+            var result = area.Id;
+            return result;
         }
 
-        var result = areaMapper.Map(area);
-        return result;
-    }
-
-    public async Task<IEnumerable<AreaResponse>> GetAll(int? applicationId, int? skip, int? take)
-    {
-        var specification = applicationId.HasValue
-            ? new ApplicationAreasSpecification(applicationId.Value)
-            : SpecificationFactory.AllSpecification<AreaEntity>();
-        var areas = await repository.List(specification, skip, take);
-
-        var result = areaMapper.MapCollection(areas);
-        return result;
-    }
-
-    public async Task<Result> Update(int areaId, UpdateAreaRequest request)
-    {
-        var area = await repository.GetOrDefault(areaId);
-        if (area is null)
+        public async Task<Result<AreaResponse>> Get(int areaId)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(area));
-            return failureResult;
+            var area = await repository.GetOrDefault(areaId);
+            if (area is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure<AreaResponse>(nameof(area));
+                return failureResult;
+            }
+
+            var result = areaMapper.Map(area);
+            return result;
         }
 
-        area.Name = request.Name;
-        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        public async Task<Result<IEnumerable<AreaResponse>>> GetAll(int? applicationId, int? skip, int? take)
         {
-            await repository.Update(area);
-            await transaction.Commit();
+            var specification = applicationId.HasValue
+                ? new ApplicationAreasSpecification(applicationId.Value)
+                : SpecificationFactory.AllSpecification<AreaEntity>();
+            var areas = await repository.List(specification, skip, take);
+
+            var result = areaMapper.MapCollection(areas).ToArray();
+            return result;
         }
 
-        return ResultFactory.Success();
-    }
-
-    public async Task<Result> Delete(int areaId)
-    {
-        var area = await repository.GetOrDefault(areaId);
-        if (area is null)
+        public async Task<Result> Update(int areaId, UpdateAreaRequest request)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(area));
-            return failureResult;
+            var area = await repository.GetOrDefault(areaId);
+            if (area is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(area));
+                return failureResult;
+            }
+
+            area.Name = request.Name;
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.Update(area);
+                await transaction.Commit();
+            }
+
+            return ResultFactory.Success();
         }
 
-        await repository.Delete(area);
-        return ResultFactory.Success();
-    }
+        public async Task<Result> Delete(int areaId)
+        {
+            var area = await repository.GetOrDefault(areaId);
+            if (area is null)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(area));
+                return failureResult;
+            }
 
-    public Task<int> Count()
-    {
-        var result = repository.Count(SpecificationFactory.AllSpecification<AreaEntity>());
-        return result;
+            await repository.Delete(area);
+            return ResultFactory.Success();
+        }
+
+        public Task<int> Count()
+        {
+            var result = repository.Count(SpecificationFactory.AllSpecification<AreaEntity>());
+            return result;
+        }
     }
 }

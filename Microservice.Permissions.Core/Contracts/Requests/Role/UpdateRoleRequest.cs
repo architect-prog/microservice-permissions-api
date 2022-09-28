@@ -1,6 +1,7 @@
-﻿namespace Microservice.Permissions.Core.Contracts.Requests.Role;
-
-public class UpdateRoleRequest
+﻿namespace Microservice.Permissions.Core.Contracts.Requests.Role
 {
-    public string? Name { get; init; }
+    public class UpdateRoleRequest
+    {
+        public string? Name { get; init; }
+    }
 }

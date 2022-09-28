@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Microservice.Permissions.Database.EntityTypeConfigurations;
-
-public sealed class ApplicationEntityTypeConfigurations : IEntityTypeConfiguration<ApplicationEntity>
+namespace Microservice.Permissions.Database.EntityTypeConfigurations
 {
-    public void Configure(EntityTypeBuilder<ApplicationEntity> builder)
+    public sealed class ApplicationEntityTypeConfigurations : IEntityTypeConfiguration<ApplicationEntity>
     {
-        builder.Property(x => x.Name).HasMaxLength(64);
+        public void Configure(EntityTypeBuilder<ApplicationEntity> builder)
+        {
+            builder.Property(x => x.Name).HasMaxLength(64);
+            builder.HasIndex(x => x.Name).IsUnique();
+        }
     }
 }

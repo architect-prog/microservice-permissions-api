@@ -1,6 +1,7 @@
-﻿namespace Microservice.Permissions.Database.Settings;
-
-public class DatabaseSettings
+﻿namespace Microservice.Permissions.Database.Settings
 {
-    public string ConnectionString { get; set; } = null!;
+    public class DatabaseSettings
+    {
+        public string ConnectionString { get; set; } = null!;
+    }
 }

@@ -3,18 +3,19 @@ using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Mappers;
-
-public class PermissionMapper : Mapper<PermissionEntity, PermissionResponse>, IPermissionMapper
+namespace Microservice.Permissions.Core.Mappers
 {
-    public override PermissionResponse Map(PermissionEntity source)
+    public class PermissionMapper : Mapper<PermissionEntity, PermissionResponse>, IPermissionMapper
     {
-        var result = new PermissionResponse
+        public override PermissionResponse Map(PermissionEntity source)
         {
-            Name = source.Name,
-            HaveAccess = source.HaveAccess
-        };
+            var result = new PermissionResponse
+            {
+                Name = source.Name,
+                HaveAccess = source.HaveAccess
+            };
 
-        return result;
+            return result;
+        }
     }
 }

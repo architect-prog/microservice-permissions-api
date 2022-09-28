@@ -2,18 +2,19 @@
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Creators;
-
-public class AreaCreator : IAreaCreator
+namespace Microservice.Permissions.Core.Creators
 {
-    public AreaEntity Create(CreateAreaRequest request)
+    public class AreaCreator : IAreaCreator
     {
-        var result = new AreaEntity
+        public AreaEntity Create(CreateAreaRequest request)
         {
-            ApplicationId = request.ApplicationId,
-            Name = request.Name
-        };
+            var result = new AreaEntity
+            {
+                ApplicationId = request.ApplicationId,
+                Name = request.Name
+            };
 
-        return result;
+            return result;
+        }
     }
 }
