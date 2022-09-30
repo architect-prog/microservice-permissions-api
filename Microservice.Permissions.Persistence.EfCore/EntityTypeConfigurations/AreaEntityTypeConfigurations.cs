@@ -9,7 +9,7 @@ namespace Microservice.Permissions.Database.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<AreaEntity> builder)
         {
             builder.Property(x => x.Name).HasMaxLength(64);
-            builder.HasIndex(x => new { x.ApplicationId, x.Name }).IsUnique();
+            builder.HasIndex(x => new {x.ApplicationId, x.Name}).IsUnique();
             builder
                 .HasOne(x => x.Application)
                 .WithMany(x => x.Areas)

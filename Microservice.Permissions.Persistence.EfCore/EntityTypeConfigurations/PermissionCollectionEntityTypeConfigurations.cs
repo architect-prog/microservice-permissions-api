@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Microservice.Permissions.Database.EntityTypeConfigurations
 {
-    public sealed class AccessEntityTypeConfigurations : IEntityTypeConfiguration<AreaRolePermissionsEntity>
+    public sealed class PermissionCollectionEntityTypeConfigurations
+        : IEntityTypeConfiguration<PermissionCollectionEntity>
     {
-        public void Configure(EntityTypeBuilder<AreaRolePermissionsEntity> builder)
+        public void Configure(EntityTypeBuilder<PermissionCollectionEntity> builder)
         {
             builder
                 .HasOne(x => x.Area)

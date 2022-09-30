@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Database.Specifications
 {
-    public sealed class PermissionsByNameSpecification : Specification<AreaRolePermissionsEntity>
+    public sealed class PermissionsByNameSpecification : Specification<PermissionCollectionEntity>
     {
         private readonly string roleName;
         private readonly string areaName;
@@ -17,14 +17,14 @@ namespace Microservice.Permissions.Database.Specifications
             this.applicationName = applicationName;
         }
 
-        public override IQueryable<AreaRolePermissionsEntity> AddEagerFetching(IQueryable<AreaRolePermissionsEntity> query)
+        public override IQueryable<PermissionCollectionEntity> AddEagerFetching(IQueryable<PermissionCollectionEntity> query)
         {
             //var result = query.Include(x => x.Role).Include(x => x.Area).ThenInclude(x => x.Application);
 
             return query;
         }
 
-        public override IQueryable<AreaRolePermissionsEntity> AddPredicates(IQueryable<AreaRolePermissionsEntity> query)
+        public override IQueryable<PermissionCollectionEntity> AddPredicates(IQueryable<PermissionCollectionEntity> query)
         {
             var result = query.Where(x => x.Area != null &&
                                           x.Role != null &&

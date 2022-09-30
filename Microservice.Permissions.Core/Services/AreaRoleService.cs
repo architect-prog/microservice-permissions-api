@@ -11,14 +11,14 @@ namespace Microservice.Permissions.Core.Services
     {
         private readonly IAreaRoleCreator areaRoleCreator;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
-        private readonly IRepository<AreaRolePermissionsEntity> repository;
+        private readonly IRepository<PermissionCollectionEntity> repository;
         private readonly IRepository<AreaEntity> areaRepository;
         private readonly IRepository<RoleEntity> roleRepository;
 
         public AreaRoleService(
             IAreaRoleCreator areaRoleCreator,
             IUnitOfWorkFactory unitOfWorkFactory,
-            IRepository<AreaRolePermissionsEntity> repository,
+            IRepository<PermissionCollectionEntity> repository,
             IRepository<AreaEntity> areaRepository,
             IRepository<RoleEntity> roleRepository)
         {

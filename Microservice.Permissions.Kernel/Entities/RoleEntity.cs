@@ -6,6 +6,6 @@ namespace Microservice.Permissions.Kernel.Entities
     {
         public string? Name { get; set; }
 
-        public IEnumerable<AreaRolePermissionsEntity> AreaRolePermissions { get; set; } = null!;
+        public ICollection<PermissionCollectionEntity> AreaRolePermissions { get; set; } = null!;
     }
 }

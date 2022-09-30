@@ -12,9 +12,9 @@ namespace Microservice.Permissions.Database
 
         public DbSet<AreaEntity> Areas => Set<AreaEntity>();
         public DbSet<RoleEntity> Roles => Set<RoleEntity>();
-        public DbSet<AreaRolePermissionsEntity> AreaRolePermissions => Set<AreaRolePermissionsEntity>();
         public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
         public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
+        public DbSet<PermissionCollectionEntity> PermissionCollections => Set<PermissionCollectionEntity>();
 
         public ApplicationDatabaseContext(IOptions<DatabaseSettings> databaseSettings)
         {

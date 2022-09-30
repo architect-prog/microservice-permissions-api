@@ -64,7 +64,7 @@ builder.Services.AddScoped<IAreaPermissionsMapper, AreaPermissionsMapper>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
-builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IPermissionCollectionService, PermissionCollectionService>();
 builder.Services.AddScoped<IAreaRoleService, AreaRoleService>();
 
 builder.Services.Decorate<IRoleService, RoleServiceValidationDecorator>();
@@ -92,6 +92,15 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors(policy =>
+{
+    var corsOrigins = configuration
+        .GetSection("AllowedCorsOrigins")
+        .Get<string[]>();
+
+    policy.WithOrigins(corsOrigins);
+});
+
 app.UseHttpsRedirection();
 
 app.MapControllers();

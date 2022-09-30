@@ -2,7 +2,6 @@
 {
     public sealed class PermissionCollectionResponse
     {
-        public int Id { get; init; }
         public int RoleId { get; init; }
         public int AreaId { get; init; }
         public bool CanCreate { get; init; }

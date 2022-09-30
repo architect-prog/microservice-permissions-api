@@ -1,15 +1,15 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Requests.Permissions
 {
-    public sealed class UpdatePermissionCollectionRequest
+    public sealed class UpdatePermissionsRequest
     {
         public int AreaId { get; }
         public int RoleId { get; }
-        public IEnumerable<UpdatePermissionRequest> Permissions { get; }
+        public IEnumerable<PermissionRequest> Permissions { get; }
 
-        public UpdatePermissionCollectionRequest(
+        public UpdatePermissionsRequest(
             int areaId,
             int roleId,
-            IEnumerable<UpdatePermissionRequest> permissions)
+            IEnumerable<PermissionRequest> permissions)
         {
             AreaId = areaId;
             RoleId = roleId;

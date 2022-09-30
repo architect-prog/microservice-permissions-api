@@ -8,7 +8,7 @@ using Microservice.Permissions.Kernel.Entities;
 namespace Microservice.Permissions.Core.Mappers
 {
     public sealed class AreaPermissionsMapper :
-        Mapper<AreaRolePermissionsEntity, PermissionCollectionResponse>,
+        Mapper<PermissionCollectionEntity, PermissionCollectionResponse>,
         IAreaPermissionsMapper
     {
         private readonly IPermissionMapper permissionMapper;
@@ -18,7 +18,7 @@ namespace Microservice.Permissions.Core.Mappers
             this.permissionMapper = permissionMapper;
         }
 
-        public override PermissionCollectionResponse Map(AreaRolePermissionsEntity source)
+        public override PermissionCollectionResponse Map(PermissionCollectionEntity source)
         {
             var permissions = source.Permissions.ToArray();
             var defaultPermissions = permissions
@@ -40,7 +40,6 @@ namespace Microservice.Permissions.Core.Mappers
 
             var result = new PermissionCollectionResponse
             {
-                Id = source.Id,
                 RoleId = source.RoleId,
                 AreaId = source.AreaId,
                 CanRead = canReadPermission?.HaveAccess ?? false,

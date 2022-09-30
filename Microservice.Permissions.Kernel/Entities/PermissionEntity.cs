@@ -7,7 +7,7 @@ namespace Microservice.Permissions.Kernel.Entities
         public string? Name { get; set; }
         public bool HaveAccess { get; set; }
 
-        public int AreaRolePermissionsId { get; set; }
-        public AreaRolePermissionsEntity? AreaRolePermissions { get; set; }
+        public int PermissionCollectionId { get; set; }
+        public PermissionCollectionEntity? PermissionCollection { get; set; }
     }
 }

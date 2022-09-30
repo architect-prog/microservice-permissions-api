@@ -5,9 +5,9 @@ namespace Microservice.Permissions.Core.Creators
 {
     public sealed class AreaRoleCreator : IAreaRoleCreator
     {
-        public AreaRolePermissionsEntity Create(int roleId, int areaId)
+        public PermissionCollectionEntity Create(int roleId, int areaId)
         {
-            var result = new AreaRolePermissionsEntity
+            var result = new PermissionCollectionEntity
             {
                 RoleId = roleId,
                 AreaId = areaId
@@ -16,13 +16,13 @@ namespace Microservice.Permissions.Core.Creators
             return result;
         }
 
-        public IEnumerable<AreaRolePermissionsEntity> CreateForRole(int roleId, IEnumerable<int> areaIds)
+        public IEnumerable<PermissionCollectionEntity> CreateForRole(int roleId, IEnumerable<int> areaIds)
         {
             var result = areaIds.Select(x => Create(roleId, x));
             return result;
         }
 
-        public IEnumerable<AreaRolePermissionsEntity> CreateForArea(int areaId, IEnumerable<int> roleIds)
+        public IEnumerable<PermissionCollectionEntity> CreateForArea(int areaId, IEnumerable<int> roleIds)
         {
             var result = roleIds.Select(x => Create(x, areaId));
             return result;

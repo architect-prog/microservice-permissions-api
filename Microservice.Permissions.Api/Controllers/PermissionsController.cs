@@ -1,4 +1,6 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
+using Microservice.Permissions.Api.Extensions;
+using Microservice.Permissions.Core.Contracts.Requests.Permissions;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +11,30 @@ namespace Microservice.Permissions.Api.Controllers
     [Route("api/permissions")]
     public sealed class PermissionsController : ControllerBase
     {
-        private readonly IPermissionService permissionService;
+        private readonly IPermissionCollectionService permissionCollectionService;
 
-        public PermissionsController(IPermissionService permissionService)
+        public PermissionsController(IPermissionCollectionService permissionCollectionService)
         {
-            this.permissionService = permissionService;
+            this.permissionCollectionService = permissionCollectionService;
         }
 
+        [ProducesBadRequest]
+        [ProducesCreated(typeof(IEnumerable<PermissionCollectionResponse>))]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreatePermissionsRequest request)
+        {
+            var result = await permissionCollectionService.Create(request);
+            var response = result.MatchActionResult(x => CreatedAtAction("GetAll", new { }, x));
+
+            return response;
+        }
+
+        [ProducesBadRequest]
         [ProducesOk(typeof(IEnumerable<PermissionCollectionResponse>))]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int[]? areaIds, [FromQuery] int[]? roleIds)
         {
-            var permissions = await permissionService.GetAll(roleIds, areaIds);
+            var permissions = await permissionCollectionService.GetAll(roleIds, areaIds);
             return Ok(permissions);
         }
 
@@ -28,7 +42,7 @@ namespace Microservice.Permissions.Api.Controllers
         [HttpGet("areas/{areaId:int}/roles/{roleId:int}")]
         public async Task<IActionResult> Get(int roleId, int areaId)
         {
-            var permissions = await permissionService.GetAll(new[] {roleId}, new[] {areaId});
+            var permissions = await permissionCollectionService.GetAll(new[] {roleId}, new[] {areaId});
             return Ok(permissions);
         }
 
