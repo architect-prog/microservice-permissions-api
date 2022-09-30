@@ -4,7 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers.Interfaces
 {
-    public interface IAreaPermissionsMapper : IMapper<AreaRolePermissionsEntity, PermissionsResponse>
+    public interface IAreaPermissionsMapper : IMapper<AreaRolePermissionsEntity, PermissionCollectionResponse>
     {
     }
 }

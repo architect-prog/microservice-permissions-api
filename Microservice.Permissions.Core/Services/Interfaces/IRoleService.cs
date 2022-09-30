@@ -6,7 +6,7 @@ namespace Microservice.Permissions.Core.Services.Interfaces
 {
     public interface IRoleService
     {
-        Task<Result<int>> Create(CreateRoleRequest request);
+        Task<Result<RoleResponse>> Create(CreateRoleRequest request);
         Task<Result<RoleResponse>> Get(int roleId);
         Task<Result<IEnumerable<RoleResponse>>> GetAll(int? skip = null, int? take = null);
         Task<Result> Update(int roleId, UpdateRoleRequest request);

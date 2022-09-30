@@ -1,17 +1,17 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Database.Specifications
+namespace Microservice.Permissions.Database.Specifications.Permission
 {
     public class PermissionsSpecification : Specification<AreaRolePermissionsEntity>
     {
-        private readonly int[]? roleIds;
         private readonly int[]? areaIds;
+        private readonly int[]? roleIds;
 
-        public PermissionsSpecification(int[]? roleIds, int[]? areaIds)
+        public PermissionsSpecification(int[]? areaIds, int[]? roleIds)
         {
-            this.roleIds = roleIds;
             this.areaIds = areaIds;
+            this.roleIds = roleIds;
         }
 
         public override IQueryable<AreaRolePermissionsEntity> AddPredicates(IQueryable<AreaRolePermissionsEntity> query)

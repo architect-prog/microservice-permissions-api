@@ -32,7 +32,7 @@ namespace Microservice.Permissions.Core.Services
             this.repository = repository;
         }
 
-        public async Task<Result<int>> Create(CreateRoleRequest request)
+        public async Task<Result<RoleResponse>> Create(CreateRoleRequest request)
         {
             var role = roleCreator.Create(request);
             using (var transaction = unitOfWorkFactory.BeginTransaction())
@@ -42,7 +42,7 @@ namespace Microservice.Permissions.Core.Services
                 await transaction.Commit();
             }
 
-            var result = role.Id;
+            var result = roleMapper.Map(role);
             return result;
         }
 

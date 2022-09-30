@@ -4,7 +4,7 @@ using Microservice.Permissions.Core.Contracts.Requests.Permissions;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Database.Specifications;
+using Microservice.Permissions.Database.Specifications.Permission;
 using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services
@@ -22,33 +22,33 @@ namespace Microservice.Permissions.Core.Services
             this.repository = repository;
         }
 
-        public async Task<Result<(int roleId, int areaId)>> Create(CreatePermissionRequest request)
+        public async Task<IEnumerable<PermissionCollectionResponse>> GetAll(int[]? areaIds, int[]? roleIds)
         {
-            var specification = new AreaPermissionsSpecification(request.AreaId);
-
-            var permissions = await repository.List(specification);
-
-            var permissionItem = new PermissionEntity()
-            {
-                Name = request.Name,
-                HaveAccess = false,
-            };
-
-            foreach (var permission in permissions)
-            {
-            }
-
-            return new Result<(int roleId, int areaId)>((1, 1));
-        }
-
-        public async Task<IEnumerable<PermissionsResponse>> GetAll(int[]? roleIds, int[]? areaIds)
-        {
-            var specification = new PermissionsSpecification(roleIds, areaIds);
+            var specification = new PermissionsSpecification(areaIds, roleIds);
 
             var areaPermissions = await repository.List(specification);
             var result = areaPermissionsMapper.MapCollection(areaPermissions);
 
             return result;
+        }
+
+        public async Task<Result<(int roleId, int areaId)>> CreateOrUpdate(UpdatePermissionCollectionRequest request)
+        {
+            // var specification = new PermissionsSpecification();
+            //
+            // var permissions = await repository.List(specification);
+            //
+            // var permissionItem = new PermissionEntity()
+            // {
+            //     Name = request.Name,
+            //     HaveAccess = false,
+            // };
+            //
+            // foreach (var permission in permissions)
+            // {
+            // }
+
+            return new Result<(int roleId, int areaId)>((1, 1));
         }
 
         // public async Task<IEnumerable<PermissionsResponse>> GetAll(string application, string role, string area)

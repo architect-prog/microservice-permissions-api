@@ -6,7 +6,7 @@ namespace Microservice.Permissions.Core.Services.Interfaces
 {
     public interface IAreaService
     {
-        Task<Result<int>> Create(CreateAreaRequest request);
+        Task<Result<AreaResponse>> Create(CreateAreaRequest request);
         Task<Result<AreaResponse>> Get(int areaId);
         Task<Result<IEnumerable<AreaResponse>>> GetAll(int? applicationId, int? skip, int? take);
         Task<Result> Update(int areaId, UpdateAreaRequest request);

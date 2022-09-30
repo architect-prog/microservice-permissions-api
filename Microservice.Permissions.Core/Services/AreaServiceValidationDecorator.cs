@@ -28,12 +28,12 @@ namespace Microservice.Permissions.Core.Services
             this.updateAreaRequestValidator = updateAreaRequestValidator;
         }
 
-        public async Task<Result<int>> Create(CreateAreaRequest request)
+        public async Task<Result<AreaResponse>> Create(CreateAreaRequest request)
         {
             var validationResult = await createAreaRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                var failureResult = ResultFactory.ValidationFailure<int>(validationResult.ToString());
+                var failureResult = ResultFactory.ValidationFailure<AreaResponse>(validationResult.ToString());
                 return failureResult;
             }
 

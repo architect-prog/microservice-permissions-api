@@ -21,12 +21,12 @@ namespace Microservice.Permissions.Api.Controllers
         }
 
         [ProducesBadRequest]
-        [ProducesCreated(typeof(int))]
+        [ProducesCreated(typeof(AreaResponse))]
         [HttpPost]
         public async Task<IActionResult> Create(CreateAreaRequest request)
         {
             var result = await areaService.Create(request);
-            var response = result.MatchActionResult(x => CreatedAtAction("Get", new {AreaId = x}, x));
+            var response = result.MatchActionResult(x => CreatedAtAction("Get", new {AreaId = x?.Id}, x));
             return response;
         }
 

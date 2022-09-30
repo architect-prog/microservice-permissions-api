@@ -21,12 +21,12 @@ namespace Microservice.Permissions.Api.Controllers
         }
 
         [ProducesBadRequest]
-        [ProducesCreated(typeof(int))]
+        [ProducesCreated(typeof(RoleResponse))]
         [HttpPost]
         public async Task<IActionResult> Create(CreateRoleRequest request)
         {
             var result = await roleService.Create(request);
-            var response = result.MatchActionResult(x => CreatedAtAction("Get", new {RoleId = x}, x));
+            var response = result.MatchActionResult(x => CreatedAtAction("Get", new {RoleId = x?.Id}, x));
 
             return response;
         }

@@ -4,6 +4,6 @@ namespace Microservice.Permissions.Core.Services.Interfaces
 {
    public interface IPermissionService
    {
-      Task<IEnumerable<PermissionsResponse>> GetAll(int[]? roleIds, int[]? areaIds);
+      Task<IEnumerable<PermissionCollectionResponse>> GetAll(int[]? areaIds, int[]? roleIds);
    }
 }

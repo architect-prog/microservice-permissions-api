@@ -62,13 +62,14 @@ builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
 builder.Services.AddScoped<IAreaPermissionsMapper, AreaPermissionsMapper>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
-builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
 builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.Decorate<IRoleService, RoleServiceValidationDecorator>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
-builder.Services.Decorate<IApplicationService, ApplicationServiceValidationDecorator>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IAreaRoleService, AreaRoleService>();
+
+builder.Services.Decorate<IRoleService, RoleServiceValidationDecorator>();
+builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
+builder.Services.Decorate<IApplicationService, ApplicationServiceValidationDecorator>();
 
 builder.Services.AddDbContext<ApplicationDatabaseContext>();
 builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();

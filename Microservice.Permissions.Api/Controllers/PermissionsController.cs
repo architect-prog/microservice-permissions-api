@@ -16,15 +16,15 @@ namespace Microservice.Permissions.Api.Controllers
             this.permissionService = permissionService;
         }
 
-        [ProducesOk(typeof(IEnumerable<PermissionsResponse>))]
+        [ProducesOk(typeof(IEnumerable<PermissionCollectionResponse>))]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int[]? roleIds, [FromQuery] int[]? areaIds)
+        public async Task<IActionResult> GetAll([FromQuery] int[]? areaIds, [FromQuery] int[]? roleIds)
         {
             var permissions = await permissionService.GetAll(roleIds, areaIds);
             return Ok(permissions);
         }
 
-        [ProducesOk(typeof(IEnumerable<PermissionsResponse>))]
+        [ProducesOk(typeof(IEnumerable<PermissionCollectionResponse>))]
         [HttpGet("areas/{areaId:int}/roles/{roleId:int}")]
         public async Task<IActionResult> Get(int roleId, int areaId)
         {

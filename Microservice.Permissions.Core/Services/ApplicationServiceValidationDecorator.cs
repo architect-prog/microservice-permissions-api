@@ -28,12 +28,12 @@ namespace Microservice.Permissions.Core.Services
             this.updateApplicationRequestValidator = updateApplicationRequestValidator;
         }
 
-        public async Task<Result<int>> Create(CreateApplicationRequest request)
+        public async Task<Result<ApplicationResponse>> Create(CreateApplicationRequest request)
         {
             var validationResult = await createApplicationRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                var failureResult = ResultFactory.ValidationFailure<int>(validationResult.ToString());
+                var failureResult = ResultFactory.ValidationFailure<ApplicationResponse>(validationResult.ToString());
                 return failureResult;
             }
 

@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Responses.Permission
 {
-    public class PermissionsResponse
+    public class PermissionCollectionResponse
     {
         public int Id { get; init; }
         public int RoleId { get; init; }

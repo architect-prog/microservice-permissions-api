@@ -3,6 +3,7 @@ using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Specifications;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
+using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
@@ -33,7 +34,7 @@ namespace Microservice.Permissions.Core.Services
             this.repository = repository;
         }
 
-        public async Task<Result<int>> Create(CreateAreaRequest request)
+        public async Task<Result<AreaResponse>> Create(CreateAreaRequest request)
         {
             var area = areaCreator.Create(request);
             using (var transaction = unitOfWorkFactory.BeginTransaction())
@@ -43,7 +44,7 @@ namespace Microservice.Permissions.Core.Services
                 await transaction.Commit();
             }
 
-            var result = area.Id;
+            var result = areaMapper.Map(area);
             return result;
         }
 

@@ -28,12 +28,12 @@ namespace Microservice.Permissions.Core.Services
             this.updateRoleRequestValidator = updateRoleRequestValidator;
         }
 
-        public async Task<Result<int>> Create(CreateRoleRequest request)
+        public async Task<Result<RoleResponse>> Create(CreateRoleRequest request)
         {
             var validationResult = await createRoleRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
             {
-                var failureResult = ResultFactory.ValidationFailure<int>(validationResult.ToString());
+                var failureResult = ResultFactory.ValidationFailure<RoleResponse>(validationResult.ToString());
                 return failureResult;
             }
 

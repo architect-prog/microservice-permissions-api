@@ -6,7 +6,7 @@ namespace Microservice.Permissions.Core.Services.Interfaces
 {
     public interface IApplicationService
     {
-        Task<Result<int>> Create(CreateApplicationRequest request);
+        Task<Result<ApplicationResponse>> Create(CreateApplicationRequest request);
         Task<Result<ApplicationResponse>> Get(int applicationId);
         Task<Result<IEnumerable<ApplicationResponse>>> GetAll(int? skip, int? take);
         Task<Result> Update(int applicationId, UpdateApplicationRequest request);

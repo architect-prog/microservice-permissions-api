@@ -29,7 +29,7 @@ namespace Microservice.Permissions.Core.Services
             this.repository = repository;
         }
 
-        public async Task<Result<int>> Create(CreateApplicationRequest request)
+        public async Task<Result<ApplicationResponse>> Create(CreateApplicationRequest request)
         {
             var application = applicationCreator.Create(request);
             using (var transaction = unitOfWorkFactory.BeginTransaction())
@@ -38,7 +38,7 @@ namespace Microservice.Permissions.Core.Services
                 await transaction.Commit();
             }
 
-            var result = application.Id;
+            var result = applicationMapper.Map(application);
             return result;
         }
 
