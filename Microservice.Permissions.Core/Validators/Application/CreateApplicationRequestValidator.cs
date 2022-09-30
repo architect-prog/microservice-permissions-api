@@ -6,7 +6,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Validators.Application
 {
-    public class CreateApplicationRequestValidator : AbstractValidator<CreateApplicationRequest>
+    public sealed class CreateApplicationRequestValidator : AbstractValidator<CreateApplicationRequest>
     {
         public CreateApplicationRequestValidator(IRepository<ApplicationEntity> repository)
         {

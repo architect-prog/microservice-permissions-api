@@ -9,7 +9,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services
 {
-    public class PermissionService : IPermissionService
+    public sealed class PermissionService : IPermissionService
     {
         private readonly IAreaPermissionsMapper areaPermissionsMapper;
         private readonly IRepository<AreaRolePermissionsEntity> repository;
@@ -34,19 +34,18 @@ namespace Microservice.Permissions.Core.Services
 
         public async Task<Result<(int roleId, int areaId)>> CreateOrUpdate(UpdatePermissionCollectionRequest request)
         {
-            // var specification = new PermissionsSpecification();
-            //
-            // var permissions = await repository.List(specification);
-            //
+            var specification = new AreaPermissionsSpecification(request.AreaId);
+            var permissions = await repository.List(specification);
+
             // var permissionItem = new PermissionEntity()
             // {
             //     Name = request.Name,
             //     HaveAccess = false,
             // };
-            //
-            // foreach (var permission in permissions)
-            // {
-            // }
+
+            foreach (var permission in permissions)
+            {
+            }
 
             return new Result<(int roleId, int areaId)>((1, 1));
         }

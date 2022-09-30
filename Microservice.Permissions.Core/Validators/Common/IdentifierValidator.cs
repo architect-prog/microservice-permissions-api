@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Core.Validators.Common;
 
-public class IdentifierValidator : AbstractValidator<int>
+public sealed class IdentifierValidator : AbstractValidator<int>
 {
     public IdentifierValidator()
     {

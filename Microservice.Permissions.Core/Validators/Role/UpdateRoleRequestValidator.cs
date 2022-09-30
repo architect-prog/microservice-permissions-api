@@ -6,7 +6,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Validators.Role
 {
-    public class UpdateRoleRequestValidator : AbstractValidator<(int id, UpdateRoleRequest request)>
+    public sealed class UpdateRoleRequestValidator : AbstractValidator<(int id, UpdateRoleRequest request)>
     {
         public UpdateRoleRequestValidator(
             IValidator<int> identifierValidator,

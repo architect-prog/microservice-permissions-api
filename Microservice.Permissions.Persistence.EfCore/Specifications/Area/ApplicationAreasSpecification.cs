@@ -3,7 +3,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Database.Specifications.Area
 {
-    public class ApplicationAreasSpecification : Specification<AreaEntity>
+    public sealed class ApplicationAreasSpecification : Specification<AreaEntity>
     {
         private readonly int applicationId;
 

@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Requests.Application
 {
-    public class UpdateApplicationRequest
+    public sealed class UpdateApplicationRequest
     {
         public string Name { get; }
         public string Description { get; }

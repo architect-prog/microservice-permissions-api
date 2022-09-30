@@ -11,7 +11,7 @@ namespace Microservice.Permissions.Api.Controllers
 {
     [ApiController]
     [Route("api/applications")]
-    public class ApplicationsController : ControllerBase
+    public sealed class ApplicationsController : ControllerBase
     {
         private readonly IApplicationService applicationService;
 

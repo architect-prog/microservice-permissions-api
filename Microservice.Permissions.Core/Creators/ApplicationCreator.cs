@@ -4,7 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Creators
 {
-    public class ApplicationCreator : IApplicationCreator
+    public sealed class ApplicationCreator : IApplicationCreator
     {
         public ApplicationEntity Create(CreateApplicationRequest request)
         {

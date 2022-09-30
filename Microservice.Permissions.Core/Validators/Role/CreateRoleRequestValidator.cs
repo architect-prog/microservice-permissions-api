@@ -6,7 +6,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Validators.Role
 {
-    public class CreateRoleRequestValidator : AbstractValidator<CreateRoleRequest>
+    public sealed class CreateRoleRequestValidator : AbstractValidator<CreateRoleRequest>
     {
         public CreateRoleRequestValidator(IRepository<RoleEntity> repository)
         {

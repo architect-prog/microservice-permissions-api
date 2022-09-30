@@ -7,7 +7,7 @@ namespace Microservice.Permissions.Api.Controllers
 {
     [ApiController]
     [Route("api/permissions")]
-    public class PermissionsController : ControllerBase
+    public sealed class PermissionsController : ControllerBase
     {
         private readonly IPermissionService permissionService;
 

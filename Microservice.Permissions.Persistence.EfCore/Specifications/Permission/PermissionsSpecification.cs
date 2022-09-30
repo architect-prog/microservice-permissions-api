@@ -3,7 +3,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Database.Specifications.Permission
 {
-    public class PermissionsSpecification : Specification<AreaRolePermissionsEntity>
+    public sealed class PermissionsSpecification : Specification<AreaRolePermissionsEntity>
     {
         private readonly int[]? areaIds;
         private readonly int[]? roleIds;

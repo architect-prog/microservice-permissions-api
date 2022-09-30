@@ -7,7 +7,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services
 {
-    public class AreaRoleService : IAreaRoleService
+    public sealed class AreaRoleService : IAreaRoleService
     {
         private readonly IAreaRoleCreator areaRoleCreator;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;

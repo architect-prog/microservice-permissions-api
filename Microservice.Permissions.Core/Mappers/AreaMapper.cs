@@ -5,7 +5,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public class AreaMapper : Mapper<AreaEntity, AreaResponse>, IAreaMapper
+    public sealed class AreaMapper : Mapper<AreaEntity, AreaResponse>, IAreaMapper
     {
         public override AreaResponse Map(AreaEntity source)
         {

@@ -11,7 +11,7 @@ namespace Microservice.Permissions.Api.Controllers
 {
     [ApiController]
     [Route("api/areas")]
-    public class AreasController : ControllerBase
+    public sealed class AreasController : ControllerBase
     {
         private readonly IAreaService areaService;
 

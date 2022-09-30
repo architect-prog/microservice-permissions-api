@@ -5,7 +5,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public class RoleMapper : Mapper<RoleEntity, RoleResponse>, IRoleMapper
+    public sealed class RoleMapper : Mapper<RoleEntity, RoleResponse>, IRoleMapper
     {
         public override RoleResponse Map(RoleEntity source)
         {

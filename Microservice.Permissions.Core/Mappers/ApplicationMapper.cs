@@ -5,7 +5,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public class ApplicationMapper : Mapper<ApplicationEntity, ApplicationResponse>, IApplicationMapper
+    public sealed class ApplicationMapper : Mapper<ApplicationEntity, ApplicationResponse>, IApplicationMapper
     {
         public override ApplicationResponse Map(ApplicationEntity source)
         {

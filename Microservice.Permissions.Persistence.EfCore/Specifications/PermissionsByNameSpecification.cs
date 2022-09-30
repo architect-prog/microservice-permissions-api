@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Database.Specifications
 {
-    public class PermissionsByNameSpecification : Specification<AreaRolePermissionsEntity>
+    public sealed class PermissionsByNameSpecification : Specification<AreaRolePermissionsEntity>
     {
         private readonly string roleName;
         private readonly string areaName;

@@ -11,7 +11,7 @@ namespace Microservice.Permissions.Api.Controllers
 {
     [ApiController]
     [Route("api/roles")]
-    public class RolesController : ControllerBase
+    public sealed class RolesController : ControllerBase
     {
         private readonly IRoleService roleService;
 

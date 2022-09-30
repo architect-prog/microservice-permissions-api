@@ -5,7 +5,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public class PermissionMapper : Mapper<PermissionEntity, PermissionResponse>, IPermissionMapper
+    public sealed class PermissionMapper : Mapper<PermissionEntity, PermissionResponse>, IPermissionMapper
     {
         public override PermissionResponse Map(PermissionEntity source)
         {

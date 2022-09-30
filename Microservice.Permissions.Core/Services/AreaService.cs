@@ -3,7 +3,6 @@ using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Specifications;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
-using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
@@ -12,7 +11,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services
 {
-    public class AreaService : IAreaService
+    public sealed class AreaService : IAreaService
     {
         private readonly IAreaCreator areaCreator;
         private readonly IAreaMapper areaMapper;

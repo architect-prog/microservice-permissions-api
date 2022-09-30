@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Requests.Role
 {
-    public class UpdateRoleRequest
+    public sealed class UpdateRoleRequest
     {
         public string Name { get; }
 

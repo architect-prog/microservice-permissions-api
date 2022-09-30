@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Kernel.Entities
 {
-    public class AreaRolePermissionsEntity : Entity<int>
+    public sealed class AreaRolePermissionsEntity : Entity<int>
     {
         public int AreaId { get; set; }
         public AreaEntity? Area { get; set; }

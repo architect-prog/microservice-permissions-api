@@ -3,7 +3,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Database.Specifications.Application;
 
-public class ApplicationByNameSpecification : Specification<ApplicationEntity>
+public sealed class ApplicationByNameSpecification : Specification<ApplicationEntity>
 {
     private readonly string name;
 

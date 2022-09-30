@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Responses.Area
 {
-    public class AreaResponse
+    public sealed class AreaResponse
     {
         public int Id { get; init; }
         public int ApplicationId { get; init; }

@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Kernel.Entities
 {
-    public class RoleEntity : Entity<int>
+    public sealed class RoleEntity : Entity<int>
     {
         public string? Name { get; set; }
 

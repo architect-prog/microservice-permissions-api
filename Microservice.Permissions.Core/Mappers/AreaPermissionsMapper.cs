@@ -7,7 +7,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public class AreaPermissionsMapper :
+    public sealed class AreaPermissionsMapper :
         Mapper<AreaRolePermissionsEntity, PermissionCollectionResponse>,
         IAreaPermissionsMapper
     {

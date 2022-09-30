@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Requests.Application
 {
-    public class CreateApplicationRequest
+    public sealed class CreateApplicationRequest
     {
         public string Name { get; }
         public string Description { get; }

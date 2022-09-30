@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Kernel.Entities
 {
-    public class PermissionEntity : Entity<int>
+    public sealed class PermissionEntity : Entity<int>
     {
         public string? Name { get; set; }
         public bool HaveAccess { get; set; }

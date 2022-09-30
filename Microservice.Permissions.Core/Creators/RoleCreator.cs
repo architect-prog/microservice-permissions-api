@@ -4,7 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Creators
 {
-    public class RoleCreator : IRoleCreator
+    public sealed class RoleCreator : IRoleCreator
     {
         public RoleEntity Create(CreateRoleRequest request)
         {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Database.Specifications.Permission
 {
-    public class AreaPermissionsSpecification : Specification<AreaRolePermissionsEntity>
+    public sealed class AreaPermissionsSpecification : Specification<AreaRolePermissionsEntity>
     {
         private readonly int areaId;
 

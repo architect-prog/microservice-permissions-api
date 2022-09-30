@@ -7,7 +7,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Validators.Area
 {
-    public class UpdateAreaRequestValidator : AbstractValidator<(int id, UpdateAreaRequest request)>
+    public sealed class UpdateAreaRequestValidator : AbstractValidator<(int id, UpdateAreaRequest request)>
     {
         public UpdateAreaRequestValidator(
             IValidator<int> identifierValidator,

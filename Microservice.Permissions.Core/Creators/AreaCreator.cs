@@ -4,7 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Creators
 {
-    public class AreaCreator : IAreaCreator
+    public sealed class AreaCreator : IAreaCreator
     {
         public AreaEntity Create(CreateAreaRequest request)
         {

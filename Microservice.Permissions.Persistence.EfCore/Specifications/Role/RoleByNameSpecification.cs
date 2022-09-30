@@ -3,7 +3,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Database.Specifications.Role
 {
-    public class RoleByNameSpecification : Specification<RoleEntity>
+    public sealed class RoleByNameSpecification : Specification<RoleEntity>
     {
         private readonly string name;
 

@@ -1,6 +1,6 @@
 ﻿namespace Microservice.Permissions.Database.Settings
 {
-    public class DatabaseSettings
+    public sealed class DatabaseSettings
     {
         public string ConnectionString { get; set; } = null!;
     }

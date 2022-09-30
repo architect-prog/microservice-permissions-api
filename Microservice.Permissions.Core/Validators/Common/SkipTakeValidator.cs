@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Core.Validators.Common
 {
-    public class SkipTakeValidator : AbstractValidator<(int? skip, int? take)>
+    public sealed class SkipTakeValidator : AbstractValidator<(int? skip, int? take)>
     {
         public SkipTakeValidator()
         {

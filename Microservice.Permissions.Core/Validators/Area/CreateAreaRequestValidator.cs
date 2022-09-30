@@ -7,7 +7,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Validators.Area
 {
-    public class CreateAreaRequestValidator : AbstractValidator<CreateAreaRequest>
+    public sealed class CreateAreaRequestValidator : AbstractValidator<CreateAreaRequest>
     {
         public CreateAreaRequestValidator(
             IRepository<AreaEntity> areaRepository,
