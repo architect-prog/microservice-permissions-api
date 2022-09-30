@@ -8,6 +8,7 @@ namespace Microservice.Permissions.Kernel.Entities
 
         public int ApplicationId { get; set; }
         public ApplicationEntity? Application { get; set; }
-        public IEnumerable<AreaRolePermissionsEntity>? AreaRolePermissions { get; set; }
+
+        public IEnumerable<AreaRolePermissionsEntity> AreaRolePermissions { get; set; } = null!;
     }
 }

@@ -42,7 +42,7 @@ namespace Microservice.Permissions.Api.Controllers
             return response;
         }
 
-        [ProducesBadRequest]
+        [ProducesNotFound]
         [ProducesOk(typeof(CollectionWrapper<RoleResponse>))]
         [HttpGet]
         public async Task<IActionResult> GetAll(int? skip, int? take)

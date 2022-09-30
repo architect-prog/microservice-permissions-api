@@ -2,6 +2,11 @@
 {
     public class CreateRoleRequest
     {
-        public string? Name { get; init; }
+        public string Name { get; }
+
+        public CreateRoleRequest(string name)
+        {
+            Name = name;
+        }
     }
 }

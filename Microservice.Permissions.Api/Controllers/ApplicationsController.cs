@@ -42,6 +42,7 @@ namespace Microservice.Permissions.Api.Controllers
             return response;
         }
 
+        [ProducesNotFound]
         [ProducesOk(typeof(CollectionWrapper<ApplicationResponse>))]
         [HttpGet]
         public async Task<IActionResult> GetAll(int? skip, int? take)

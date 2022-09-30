@@ -8,6 +8,6 @@ namespace Microservice.Permissions.Kernel.Entities
         public AreaEntity? Area { get; set; }
         public int RoleId { get; set; }
         public RoleEntity? Role { get; set; }
-        public IEnumerable<PermissionEntity>? Permissions { get; set; }
+        public IEnumerable<PermissionEntity> Permissions { get; set; } = null!;
     }
 }

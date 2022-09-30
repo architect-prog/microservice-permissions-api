@@ -2,7 +2,13 @@
 {
     public class CreateAreaRequest
     {
-        public int ApplicationId { get; init; }
-        public string? Name { get; init; }
+        public int ApplicationId { get; }
+        public string Name { get; }
+
+        public CreateAreaRequest(int applicationId, string name)
+        {
+            ApplicationId = applicationId;
+            Name = name;
+        }
     }
 }

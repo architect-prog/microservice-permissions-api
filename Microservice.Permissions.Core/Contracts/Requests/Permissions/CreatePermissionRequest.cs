@@ -2,7 +2,13 @@
 {
     public class CreatePermissionRequest
     {
-        public int AreaId { get; init; }
-        public string? Name { get; set; }
+        public int AreaId { get; }
+        public string Name { get; }
+
+        public CreatePermissionRequest(int areaId, string name)
+        {
+            AreaId = areaId;
+            Name = name;
+        }
     }
 }

@@ -9,17 +9,20 @@ namespace Microservice.Permissions.Core.Services
     public sealed class AreaServiceValidationDecorator : IAreaService
     {
         private readonly IAreaService areaService;
+        private readonly IValidator<int> identifierValidator;
         private readonly IValidator<(int?, int?)> skipTakeValidator;
         private readonly IValidator<CreateAreaRequest> createAreaRequestValidator;
-        private readonly IValidator<UpdateAreaRequest> updateAreaRequestValidator;
+        private readonly IValidator<(int, UpdateAreaRequest)> updateAreaRequestValidator;
 
         public AreaServiceValidationDecorator(
             IAreaService areaService,
+            IValidator<int> identifierValidator,
             IValidator<(int?, int?)> skipTakeValidator,
             IValidator<CreateAreaRequest> createAreaRequestValidator,
-            IValidator<UpdateAreaRequest> updateAreaRequestValidator)
+            IValidator<(int, UpdateAreaRequest)> updateAreaRequestValidator)
         {
             this.areaService = areaService;
+            this.identifierValidator = identifierValidator;
             this.skipTakeValidator = skipTakeValidator;
             this.createAreaRequestValidator = createAreaRequestValidator;
             this.updateAreaRequestValidator = updateAreaRequestValidator;
@@ -39,6 +42,13 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result<AreaResponse>> Get(int areaId)
         {
+            var validationResult = identifierValidator.Validate(areaId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure<AreaResponse>(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return areaService.Get(areaId);
         }
 
@@ -48,7 +58,7 @@ namespace Microservice.Permissions.Core.Services
             if (!validationResult.IsValid)
             {
                 var failureResult = ResultFactory
-                    .ValidationFailure<IEnumerable<AreaResponse>>(validationResult.ToString());
+                    .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(validationResult.ToString());
                 return Task.FromResult(failureResult);
             }
 
@@ -57,7 +67,7 @@ namespace Microservice.Permissions.Core.Services
 
         public async Task<Result> Update(int areaId, UpdateAreaRequest request)
         {
-            var validationResult = await updateAreaRequestValidator.ValidateAsync(request);
+            var validationResult = await updateAreaRequestValidator.ValidateAsync((areaId, request));
             if (!validationResult.IsValid)
             {
                 var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
@@ -70,6 +80,13 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result> Delete(int areaId)
         {
+            var validationResult = identifierValidator.Validate(areaId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return areaService.Delete(areaId);
         }
 

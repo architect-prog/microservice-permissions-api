@@ -1,6 +1,7 @@
 using ArchitectProg.Kernel.Extensions.Exceptions;
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.WebApi.Extensions.Filters;
+using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
@@ -19,8 +20,8 @@ using Microservice.Permissions.Database;
 using Microservice.Permissions.Database.Repositories;
 using Microservice.Permissions.Database.Services;
 using Microservice.Permissions.Database.Settings;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UpdateRoleRequestValidator = Microservice.Permissions.Core.Validators.Role.UpdateRoleRequestValidator;
 using ValidationException = ArchitectProg.Kernel.Extensions.Exceptions.ValidationException;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,10 +30,25 @@ var configuration = builder.Configuration;
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers(options =>
-{
-    options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
-    options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ResourceNotFoundException)));
-}).AddControllersAsServices();
+    {
+        options.Filters.Add(new BadRequestOnExceptionFilter(typeof(ValidationException)));
+        options.Filters.Add(new NotFoundOnExceptionFilter(typeof(ResourceNotFoundException)));
+    })
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var messages = context.ModelState.Values
+                .SelectMany(x => x.Errors)
+                .Select(x => x.ErrorMessage);
+
+            var message = string.Join(" ", messages);
+
+            var response = new ErrorResult(StatusCodes.Status400BadRequest, message);
+            return new BadRequestObjectResult(response);
+        };
+    })
+    .AddControllersAsServices();
 
 builder.Services.AddScoped<IRoleCreator, RoleCreator>();
 builder.Services.AddScoped<IAreaCreator, AreaCreator>();
@@ -58,13 +74,14 @@ builder.Services.AddDbContext<ApplicationDatabaseContext>();
 builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
+builder.Services.AddScoped<IValidator<int>, IdentifierValidator>();
 builder.Services.AddScoped<IValidator<(int?, int?)>, SkipTakeValidator>();
 builder.Services.AddScoped<IValidator<CreateRoleRequest>, CreateRoleRequestValidator>();
-builder.Services.AddScoped<IValidator<UpdateRoleRequest>, UpdateRoleRequestValidator>();
+builder.Services.AddScoped<IValidator<(int, UpdateRoleRequest)>, UpdateRoleRequestValidator>();
 builder.Services.AddScoped<IValidator<CreateApplicationRequest>, CreateApplicationRequestValidator>();
-builder.Services.AddScoped<IValidator<UpdateApplicationRequest>, UpdateApplicationRequestValidator>();
+builder.Services.AddScoped<IValidator<(int, UpdateApplicationRequest)>, UpdateApplicationRequestValidator>();
 builder.Services.AddScoped<IValidator<CreateAreaRequest>, CreateAreaRequestValidator>();
-builder.Services.AddScoped<IValidator<UpdateAreaRequest>, UpdateAreaRequestValidator>();
+builder.Services.AddScoped<IValidator<(int, UpdateAreaRequest)>, UpdateAreaRequestValidator>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 

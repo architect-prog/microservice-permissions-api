@@ -13,10 +13,12 @@ namespace Microservice.Permissions.Core.Validators.Application
             RuleFor(x => x.Name).NotNull().NotEmpty();
             RuleFor(x => x.Name).MustAsync(async (x, token) =>
             {
-                var specification = new ApplicationByNameSpecification(x!);
+                var specification = new ApplicationByNameSpecification(x);
                 var isExist = await repository.Exists(specification, token);
                 return !isExist;
             }).WithMessage("'Name' must be unique.");
+
+            RuleFor(x => x.Description).NotNull();
         }
     }
 }

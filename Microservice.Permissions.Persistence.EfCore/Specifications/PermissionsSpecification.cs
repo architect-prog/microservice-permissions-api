@@ -21,7 +21,7 @@ namespace Microservice.Permissions.Database.Specifications
                 result = result.Where(x => roleIds.Any(y => x.RoleId == y));
 
             if (areaIds is not null && areaIds.Any())
-                result = query.Where(x => areaIds.Any(y => x.AreaId == y));
+                result = result.Where(x => areaIds.Any(y => x.AreaId == y));
 
             return result;
         }

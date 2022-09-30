@@ -9,17 +9,20 @@ namespace Microservice.Permissions.Core.Services
     public sealed class RoleServiceValidationDecorator : IRoleService
     {
         private readonly IRoleService roleService;
+        private readonly IValidator<int> identifierValidator;
         private readonly IValidator<(int?, int?)> skipTakeValidator;
         private readonly IValidator<CreateRoleRequest> createRoleRequestValidator;
-        private readonly IValidator<UpdateRoleRequest> updateRoleRequestValidator;
+        private readonly IValidator<(int, UpdateRoleRequest)> updateRoleRequestValidator;
 
         public RoleServiceValidationDecorator(
             IRoleService roleService,
+            IValidator<int> identifierValidator,
             IValidator<(int?, int?)> skipTakeValidator,
             IValidator<CreateRoleRequest> createRoleRequestValidator,
-            IValidator<UpdateRoleRequest> updateRoleRequestValidator)
+            IValidator<(int, UpdateRoleRequest)> updateRoleRequestValidator)
         {
             this.roleService = roleService;
+            this.identifierValidator = identifierValidator;
             this.skipTakeValidator = skipTakeValidator;
             this.createRoleRequestValidator = createRoleRequestValidator;
             this.updateRoleRequestValidator = updateRoleRequestValidator;
@@ -40,6 +43,13 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result<RoleResponse>> Get(int roleId)
         {
+            var validationResult = identifierValidator.Validate(roleId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure<RoleResponse>(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return roleService.Get(roleId);
         }
 
@@ -49,7 +59,7 @@ namespace Microservice.Permissions.Core.Services
             if (!validationResult.IsValid)
             {
                 var failureResult =
-                    ResultFactory.ValidationFailure<IEnumerable<RoleResponse>>(validationResult.ToString());
+                    ResultFactory.ResourceNotFoundFailure<IEnumerable<RoleResponse>>(validationResult.ToString());
                 return Task.FromResult(failureResult);
             }
 
@@ -58,7 +68,7 @@ namespace Microservice.Permissions.Core.Services
 
         public async Task<Result> Update(int roleId, UpdateRoleRequest request)
         {
-            var validationResult = await updateRoleRequestValidator.ValidateAsync(request);
+            var validationResult = await updateRoleRequestValidator.ValidateAsync((roleId, request));
             if (!validationResult.IsValid)
             {
                 var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
@@ -71,6 +81,13 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result> Delete(int roleId)
         {
+            var validationResult = identifierValidator.Validate(roleId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return roleService.Delete(roleId);
         }
 

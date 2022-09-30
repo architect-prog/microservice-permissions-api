@@ -11,16 +11,13 @@ namespace Microservice.Permissions.Core.Services
 {
     public class PermissionService : IPermissionService
     {
-        private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IAreaPermissionsMapper areaPermissionsMapper;
         private readonly IRepository<AreaRolePermissionsEntity> repository;
 
         public PermissionService(
-            IUnitOfWorkFactory unitOfWorkFactory,
             IAreaPermissionsMapper areaPermissionsMapper,
             IRepository<AreaRolePermissionsEntity> repository)
         {
-            this.unitOfWorkFactory = unitOfWorkFactory;
             this.areaPermissionsMapper = areaPermissionsMapper;
             this.repository = repository;
         }
@@ -39,10 +36,9 @@ namespace Microservice.Permissions.Core.Services
 
             foreach (var permission in permissions)
             {
-
             }
 
-            return null;
+            return new Result<(int roleId, int areaId)>((1, 1));
         }
 
         public async Task<IEnumerable<PermissionsResponse>> GetAll(int[]? roleIds, int[]? areaIds)

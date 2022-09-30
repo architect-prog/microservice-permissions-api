@@ -81,6 +81,7 @@ namespace Microservice.Permissions.Core.Services
             }
 
             area.Name = request.Name;
+            area.ApplicationId = request.ApplicationId;
             using (var transaction = unitOfWorkFactory.BeginTransaction())
             {
                 await repository.Update(area);

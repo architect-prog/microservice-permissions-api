@@ -2,6 +2,11 @@
 {
     public class UpdateRoleRequest
     {
-        public string? Name { get; init; }
+        public string Name { get; }
+
+        public UpdateRoleRequest(string name)
+        {
+            Name = name;
+        }
     }
 }

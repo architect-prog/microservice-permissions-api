@@ -9,17 +9,20 @@ namespace Microservice.Permissions.Core.Services
     public sealed class ApplicationServiceValidationDecorator : IApplicationService
     {
         private readonly IApplicationService applicationService;
+        private readonly IValidator<int> identifierValidator;
         private readonly IValidator<(int?, int?)> skipTakeValidator;
         private readonly IValidator<CreateApplicationRequest> createApplicationRequestValidator;
-        private readonly IValidator<UpdateApplicationRequest> updateApplicationRequestValidator;
+        private readonly IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator;
 
         public ApplicationServiceValidationDecorator(
             IApplicationService applicationService,
+            IValidator<int> identifierValidator,
             IValidator<(int?, int?)> skipTakeValidator,
             IValidator<CreateApplicationRequest> createApplicationRequestValidator,
-            IValidator<UpdateApplicationRequest> updateApplicationRequestValidator)
+            IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator)
         {
             this.applicationService = applicationService;
+            this.identifierValidator = identifierValidator;
             this.skipTakeValidator = skipTakeValidator;
             this.createApplicationRequestValidator = createApplicationRequestValidator;
             this.updateApplicationRequestValidator = updateApplicationRequestValidator;
@@ -39,6 +42,14 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result<ApplicationResponse>> Get(int applicationId)
         {
+            var validationResult = identifierValidator.Validate(applicationId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory
+                    .ResourceNotFoundFailure<ApplicationResponse>(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return applicationService.Get(applicationId);
         }
 
@@ -48,7 +59,7 @@ namespace Microservice.Permissions.Core.Services
             if (!validationResult.IsValid)
             {
                 var failureResult = ResultFactory
-                    .ValidationFailure<IEnumerable<ApplicationResponse>>(validationResult.ToString());
+                    .ResourceNotFoundFailure<IEnumerable<ApplicationResponse>>(validationResult.ToString());
                 return Task.FromResult(failureResult);
             }
 
@@ -57,10 +68,12 @@ namespace Microservice.Permissions.Core.Services
 
         public async Task<Result> Update(int applicationId, UpdateApplicationRequest request)
         {
-            var validationResult = await updateApplicationRequestValidator.ValidateAsync(request);
-            if (!validationResult.IsValid)
+            var requestValidationResult = await updateApplicationRequestValidator
+                .ValidateAsync((applicationId, request));
+
+            if (!requestValidationResult.IsValid)
             {
-                var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
+                var failureResult = ResultFactory.ValidationFailure(requestValidationResult.ToString());
                 return failureResult;
             }
 
@@ -70,6 +83,13 @@ namespace Microservice.Permissions.Core.Services
 
         public Task<Result> Delete(int applicationId)
         {
+            var validationResult = identifierValidator.Validate(applicationId);
+            if (!validationResult.IsValid)
+            {
+                var failureResult = ResultFactory.ResourceNotFoundFailure(validationResult.ToString());
+                return Task.FromResult(failureResult);
+            }
+
             return applicationService.Delete(applicationId);
         }
 
