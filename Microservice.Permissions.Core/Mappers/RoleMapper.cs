@@ -3,19 +3,18 @@ using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Mappers
-{
-    public sealed class RoleMapper : Mapper<RoleEntity, RoleResponse>, IRoleMapper
-    {
-        public override RoleResponse Map(RoleEntity source)
-        {
-            var result = new RoleResponse
-            {
-                Id = source.Id,
-                Name = source.Name
-            };
+namespace Microservice.Permissions.Core.Mappers;
 
-            return result;
-        }
+public sealed class RoleMapper : Mapper<RoleEntity, RoleResponse>, IRoleMapper
+{
+    public override RoleResponse Map(RoleEntity source)
+    {
+        var result = new RoleResponse
+        {
+            Id = source.Id,
+            Name = source.Name
+        };
+
+        return result;
     }
 }

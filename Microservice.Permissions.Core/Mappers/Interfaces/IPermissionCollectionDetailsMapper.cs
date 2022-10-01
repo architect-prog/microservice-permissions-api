@@ -4,6 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers.Interfaces;
 
-public interface IPermissionCollectionMapper : IMapper<PermissionCollectionEntity, PermissionCollectionResponse>
+public interface IPermissionCollectionDetailsMapper
+    : IMapper<PermissionCollectionEntity, PermissionCollectionDetailsResponse>
 {
 }

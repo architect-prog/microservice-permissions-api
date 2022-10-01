@@ -8,102 +8,101 @@ using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Services
+namespace Microservice.Permissions.Core.Services;
+
+public sealed class RoleService : IRoleService
 {
-    public sealed class RoleService : IRoleService
+    private readonly IRoleCreator roleCreator;
+    private readonly IRoleMapper roleMapper;
+    private readonly IPermissionCollectionService permissionCollectionService;
+    private readonly IUnitOfWorkFactory unitOfWorkFactory;
+    private readonly IRepository<RoleEntity> repository;
+
+    public RoleService(
+        IRoleCreator roleCreator,
+        IRoleMapper roleMapper,
+        IPermissionCollectionService permissionCollectionService,
+        IUnitOfWorkFactory unitOfWorkFactory,
+        IRepository<RoleEntity> repository)
     {
-        private readonly IRoleCreator roleCreator;
-        private readonly IRoleMapper roleMapper;
-        private readonly IPermissionCollectionService permissionCollectionService;
-        private readonly IUnitOfWorkFactory unitOfWorkFactory;
-        private readonly IRepository<RoleEntity> repository;
+        this.roleCreator = roleCreator;
+        this.roleMapper = roleMapper;
+        this.permissionCollectionService = permissionCollectionService;
+        this.unitOfWorkFactory = unitOfWorkFactory;
+        this.repository = repository;
+    }
 
-        public RoleService(
-            IRoleCreator roleCreator,
-            IRoleMapper roleMapper,
-            IPermissionCollectionService permissionCollectionService,
-            IUnitOfWorkFactory unitOfWorkFactory,
-            IRepository<RoleEntity> repository)
+    public async Task<Result<RoleResponse>> Create(CreateRoleRequest request)
+    {
+        var role = roleCreator.Create(request);
+        using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
-            this.roleCreator = roleCreator;
-            this.roleMapper = roleMapper;
-            this.permissionCollectionService = permissionCollectionService;
-            this.unitOfWorkFactory = unitOfWorkFactory;
-            this.repository = repository;
+            await repository.Add(role);
+            await permissionCollectionService.CreateForRole(role.Id);
+            await transaction.Commit();
         }
 
-        public async Task<Result<RoleResponse>> Create(CreateRoleRequest request)
-        {
-            var role = roleCreator.Create(request);
-            using (var transaction = unitOfWorkFactory.BeginTransaction())
-            {
-                await repository.Add(role);
-                await permissionCollectionService.CreateForRole(role.Id);
-                await transaction.Commit();
-            }
+        var result = roleMapper.Map(role);
+        return result;
+    }
 
-            var result = roleMapper.Map(role);
-            return result;
+    public async Task<Result<RoleResponse>> Get(int roleId)
+    {
+        var role = await repository.GetOrDefault(roleId);
+        if (role is null)
+        {
+            var failureResult = ResultFactory.ResourceNotFoundFailure<RoleResponse>(nameof(role));
+            return failureResult;
         }
 
-        public async Task<Result<RoleResponse>> Get(int roleId)
-        {
-            var role = await repository.GetOrDefault(roleId);
-            if (role is null)
-            {
-                var failureResult = ResultFactory.ResourceNotFoundFailure<RoleResponse>(nameof(role));
-                return failureResult;
-            }
+        var result = roleMapper.Map(role);
+        return result;
+    }
 
-            var result = roleMapper.Map(role);
-            return result;
+    public async Task<Result<IEnumerable<RoleResponse>>> GetAll(int? skip = null, int? take = null)
+    {
+        var roles = await repository
+            .List(SpecificationFactory.AllSpecification<RoleEntity>(), skip, take);
+
+        var result = roleMapper.MapCollection(roles).ToArray();
+        return result;
+    }
+
+    public async Task<Result> Update(int roleId, UpdateRoleRequest request)
+    {
+        var role = await repository.GetOrDefault(roleId);
+        if (role is null)
+        {
+            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
+            return failureResult;
         }
 
-        public async Task<Result<IEnumerable<RoleResponse>>> GetAll(int? skip = null, int? take = null)
+        role.Name = request.Name;
+        using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
-            var roles = await repository
-                .List(SpecificationFactory.AllSpecification<RoleEntity>(), skip, take);
-
-            var result = roleMapper.MapCollection(roles).ToArray();
-            return result;
+            await repository.Update(role);
+            await transaction.Commit();
         }
 
-        public async Task<Result> Update(int roleId, UpdateRoleRequest request)
+        return ResultFactory.Success();
+    }
+
+    public async Task<Result> Delete(int roleId)
+    {
+        var role = await repository.GetOrDefault(roleId);
+        if (role is null)
         {
-            var role = await repository.GetOrDefault(roleId);
-            if (role is null)
-            {
-                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
-                return failureResult;
-            }
-
-            role.Name = request.Name;
-            using (var transaction = unitOfWorkFactory.BeginTransaction())
-            {
-                await repository.Update(role);
-                await transaction.Commit();
-            }
-
-            return ResultFactory.Success();
+            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
+            return failureResult;
         }
 
-        public async Task<Result> Delete(int roleId)
-        {
-            var role = await repository.GetOrDefault(roleId);
-            if (role is null)
-            {
-                var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
-                return failureResult;
-            }
+        await repository.Delete(role);
+        return ResultFactory.Success();
+    }
 
-            await repository.Delete(role);
-            return ResultFactory.Success();
-        }
-
-        public Task<int> Count()
-        {
-            var result = repository.Count(SpecificationFactory.AllSpecification<RoleEntity>());
-            return result;
-        }
+    public Task<int> Count()
+    {
+        var result = repository.Count(SpecificationFactory.AllSpecification<RoleEntity>());
+        return result;
     }
 }

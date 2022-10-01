@@ -2,18 +2,17 @@
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Core.Creators
-{
-    public sealed class RoleCreator : IRoleCreator
-    {
-        public RoleEntity Create(CreateRoleRequest request)
-        {
-            var result = new RoleEntity
-            {
-                Name = request.Name
-            };
+namespace Microservice.Permissions.Core.Creators;
 
-            return result;
-        }
+public sealed class RoleCreator : IRoleCreator
+{
+    public RoleEntity Create(CreateRoleRequest request)
+    {
+        var result = new RoleEntity
+        {
+            Name = request.Name
+        };
+
+        return result;
     }
 }

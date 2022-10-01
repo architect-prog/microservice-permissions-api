@@ -1,9 +1,7 @@
 ﻿namespace Microservice.Permissions.Core.Contracts.Responses.Permission;
 
-public sealed class PermissionCollectionResponse
+public sealed class PermissionCollectionDetailsResponse
 {
-    public int RoleId { get; init; }
-    public int AreaId { get; init; }
     public bool CanCreate { get; init; }
     public bool CanRead { get; init; }
     public bool CanUpdate { get; init; }

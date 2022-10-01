@@ -3,43 +3,42 @@ using ArchitectProg.Kernel.Extensions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Microservice.Permissions.Database.Services
+namespace Microservice.Permissions.Database.Services;
+
+public sealed class UnitOfWork : IUnitOfWork
 {
-    public sealed class UnitOfWork : IUnitOfWork
+    private readonly bool isNestedTransaction;
+    private readonly IDbContextTransaction transaction;
+
+    public UnitOfWork(DbContext context)
     {
-        private readonly bool isNestedTransaction;
-        private readonly IDbContextTransaction transaction;
+        var currentTransaction = context.Database.CurrentTransaction;
 
-        public UnitOfWork(DbContext context)
-        {
-            var currentTransaction = context.Database.CurrentTransaction;
+        isNestedTransaction = currentTransaction is not null;
+        transaction = currentTransaction ?? context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
+    }
 
-            isNestedTransaction = currentTransaction is not null;
-            transaction = currentTransaction ?? context.Database.BeginTransaction(IsolationLevel.ReadCommitted);
-        }
+    public async Task Commit()
+    {
+        if (isNestedTransaction)
+            return;
 
-        public async Task Commit()
-        {
-            if (isNestedTransaction)
-                return;
+        await transaction.CommitAsync();
+    }
 
-            await transaction.CommitAsync();
-        }
+    public async Task Rollback()
+    {
+        if (isNestedTransaction)
+            return;
 
-        public async Task Rollback()
-        {
-            if (isNestedTransaction)
-                return;
+        await transaction.RollbackAsync();
+    }
 
-            await transaction.RollbackAsync();
-        }
+    public void Dispose()
+    {
+        if (isNestedTransaction)
+            return;
 
-        public void Dispose()
-        {
-            if (isNestedTransaction)
-                return;
-
-            transaction.Dispose();
-        }
+        transaction.Dispose();
     }
 }

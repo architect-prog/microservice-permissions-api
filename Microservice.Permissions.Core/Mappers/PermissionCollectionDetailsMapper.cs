@@ -7,18 +7,18 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers;
 
-public sealed class PermissionCollectionMapper :
-    Mapper<PermissionCollectionEntity, PermissionCollectionResponse>,
-    IPermissionCollectionMapper
+public sealed class PermissionCollectionDetailsMapper :
+    Mapper<PermissionCollectionEntity, PermissionCollectionDetailsResponse>,
+    IPermissionCollectionDetailsMapper
 {
     private readonly IPermissionMapper permissionMapper;
 
-    public PermissionCollectionMapper(IPermissionMapper permissionMapper)
+    public PermissionCollectionDetailsMapper(IPermissionMapper permissionMapper)
     {
         this.permissionMapper = permissionMapper;
     }
 
-    public override PermissionCollectionResponse Map(PermissionCollectionEntity source)
+    public override PermissionCollectionDetailsResponse Map(PermissionCollectionEntity source)
     {
         var permissions = source.Permissions.ToArray();
         var defaultPermissions = permissions
@@ -38,10 +38,8 @@ public sealed class PermissionCollectionMapper :
         var canDeletePermission = defaultPermissions
             .FirstOrDefault(x => x.Name.EqualsIgnoreCase(PermissionConstants.CanDelete));
 
-        var result = new PermissionCollectionResponse
+        var result = new PermissionCollectionDetailsResponse
         {
-            RoleId = source.RoleId,
-            AreaId = source.AreaId,
             CanRead = canReadPermission?.HaveAccess ?? false,
             CanCreate = canCreatePermission?.HaveAccess ?? false,
             CanUpdate = canUpdatePermission?.HaveAccess ?? false,

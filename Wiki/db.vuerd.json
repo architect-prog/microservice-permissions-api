@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -412.8000157470706,
-    "scrollLeft": -355.2000135498056,
-    "zoomLevel": 0.8,
+    "scrollTop": -631.6800240966801,
+    "scrollLeft": -279.3600106567391,
+    "zoomLevel": 1,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -180,9 +180,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 271.1923,
-          "top": 733.6192,
-          "zIndex": 1,
+          "left": 265.4323,
+          "top": 803.6992,
+          "zIndex": 34,
           "widthName": 60,
           "widthComment": 60
         },
@@ -265,9 +265,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 781.696,
-          "top": 509.5466,
-          "zIndex": 2,
+          "left": 775.936,
+          "top": 505.7066,
+          "zIndex": 22,
           "widthName": 60,
           "widthComment": 60
         },
@@ -349,10 +349,10 @@
           }
         ],
         "ui": {
-          "active": false,
-          "left": 795.0134,
-          "top": 781.9204,
-          "zIndex": 9,
+          "active": true,
+          "left": 775.8134,
+          "top": 775.2004,
+          "zIndex": 39,
           "widthName": 126.28076171875,
           "widthComment": 60
         },
@@ -387,7 +387,7 @@
             "id": "71901ce4-6359-413e-862c-028a0a34f7bd"
           },
           {
-            "name": "area_role_permissions_id",
+            "name": "permission_collection_id",
             "comment": "",
             "dataType": "int",
             "default": "",
@@ -402,7 +402,7 @@
               "pk": false,
               "fk": true,
               "pfk": false,
-              "widthName": 150.85888671875,
+              "widthName": 143.62890625,
               "widthComment": 60,
               "widthDataType": 60,
               "widthDefault": 60
@@ -458,9 +458,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 748.8651,
+          "left": 730.6251,
           "top": 1089.04,
-          "zIndex": 4,
+          "zIndex": 35,
           "widthName": 64.8544921875,
           "widthComment": 60,
           "color": "#000000"
@@ -485,8 +485,8 @@
           "columnIds": [
             "46cd41f8-ce3f-4b0c-83c3-edb98f14660e"
           ],
-          "x": 970.1813515625,
-          "y": 640.0466,
+          "x": 964.4213515625,
+          "y": 636.2066,
           "direction": "bottom"
         },
         "end": {
@@ -494,8 +494,8 @@
           "columnIds": [
             "dbba6333-8591-48ab-b28f-157b2ac705dc"
           ],
-          "x": 968.5134,
-          "y": 781.9204,
+          "x": 949.3134,
+          "y": 775.2004,
           "direction": "top"
         },
         "constraintName": "fk_area_to_access",
@@ -520,8 +520,8 @@
           "columnIds": [
             "471c9168-8936-4934-b689-ceb2aee955eb"
           ],
-          "x": 1158.666703125,
-          "y": 574.7966,
+          "x": 1152.9067031250001,
+          "y": 570.9566,
           "direction": "right"
         },
         "constraintName": "fk_application_to_area",
@@ -537,8 +537,8 @@
           "columnIds": [
             "faf89778-22bc-4e3d-8f85-46ba54dba063"
           ],
-          "x": 626.6586085937499,
-          "y": 788.6192,
+          "x": 620.8986085937499,
+          "y": 858.6992,
           "direction": "right"
         },
         "end": {
@@ -546,8 +546,8 @@
           "columnIds": [
             "b8ed77cc-752a-45f1-b37c-0d82f48c7131"
           ],
-          "x": 795.0134,
-          "y": 847.1704,
+          "x": 775.8134,
+          "y": 840.4504,
           "direction": "left"
         },
         "constraintName": "fk_role_to_access",
@@ -563,8 +563,8 @@
           "columnIds": [
             "82b3b592-e06e-4815-ad00-444d425bf8fa"
           ],
-          "x": 968.5134,
-          "y": 912.4204,
+          "x": 949.3134,
+          "y": 905.7004,
           "direction": "bottom"
         },
         "end": {
@@ -572,7 +572,7 @@
           "columnIds": [
             "0a003716-4c01-49ac-b4dc-bc20d10d6173"
           ],
-          "x": 972.02769765625,
+          "x": 950.172707421875,
           "y": 1089.04,
           "direction": "top"
         },

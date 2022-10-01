@@ -2,13 +2,12 @@
 using Microservice.Permissions.Core.Contracts.Requests.Permissions;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 
-namespace Microservice.Permissions.Core.Services.Interfaces
+namespace Microservice.Permissions.Core.Services.Interfaces;
+
+public interface IPermissionService
 {
-   public interface IPermissionService
-   {
-      Task<Result<IEnumerable<PermissionCollectionResponse>>> Create(CreatePermissionsRequest request);
-      Task<Result<IEnumerable<PermissionCollectionResponse>>> GetAll(int[]? areaIds, int[]? roleIds);
-      Task<Result> Update(UpdatePermissionsRequest request);
-      Task<Result> Delete(int areaId, string[] permission);
-   }
+   Task<Result<PermissionCollectionDetailsResponse>> Get(string application, string area, string role);
+   Task<Result<IEnumerable<PermissionCollectionResponse>>> GetAll(int[]? areaIds, int[]? roleIds);
+   Task<Result> Update(UpdatePermissionsRequest request);
+   Task<Result> Delete(int areaId, string[] permissions);
 }

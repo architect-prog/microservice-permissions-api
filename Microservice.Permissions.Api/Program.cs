@@ -5,6 +5,7 @@ using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
+using Microservice.Permissions.Core.Contracts.Requests.Permissions;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Creators;
 using Microservice.Permissions.Core.Creators.Interfaces;
@@ -15,6 +16,7 @@ using Microservice.Permissions.Core.Services.Interfaces;
 using Microservice.Permissions.Core.Validators.Application;
 using Microservice.Permissions.Core.Validators.Area;
 using Microservice.Permissions.Core.Validators.Common;
+using Microservice.Permissions.Core.Validators.Permission;
 using Microservice.Permissions.Core.Validators.Role;
 using Microservice.Permissions.Database;
 using Microservice.Permissions.Database.Repositories;
@@ -61,6 +63,7 @@ builder.Services.AddScoped<IRoleMapper, RoleMapper>();
 builder.Services.AddScoped<IPermissionMapper, PermissionMapper>();
 builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
 builder.Services.AddScoped<IPermissionCollectionMapper, PermissionCollectionMapper>();
+builder.Services.AddScoped<IPermissionCollectionDetailsMapper, PermissionCollectionDetailsMapper>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
@@ -71,12 +74,15 @@ builder.Services.AddScoped<IPermissionCollectionService, PermissionCollectionSer
 builder.Services.Decorate<IRoleService, RoleServiceValidationDecorator>();
 builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
 builder.Services.Decorate<IApplicationService, ApplicationServiceValidationDecorator>();
+builder.Services.Decorate<IPermissionService, PermissionServiceValidationDecorator>();
 
 builder.Services.AddDbContext<ApplicationDatabaseContext>();
 builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
 builder.Services.AddScoped<IValidator<int>, IdentifierValidator>();
+builder.Services.AddScoped<IValidator<int[]>, IdentifierArrayValidator>();
+builder.Services.AddScoped<IValidator<string[]>, PermissionNamesValidator>();
 builder.Services.AddScoped<IValidator<(int?, int?)>, SkipTakeValidator>();
 builder.Services.AddScoped<IValidator<CreateRoleRequest>, CreateRoleRequestValidator>();
 builder.Services.AddScoped<IValidator<(int, UpdateRoleRequest)>, UpdateRoleRequestValidator>();
@@ -84,6 +90,7 @@ builder.Services.AddScoped<IValidator<CreateApplicationRequest>, CreateApplicati
 builder.Services.AddScoped<IValidator<(int, UpdateApplicationRequest)>, UpdateApplicationRequestValidator>();
 builder.Services.AddScoped<IValidator<CreateAreaRequest>, CreateAreaRequestValidator>();
 builder.Services.AddScoped<IValidator<(int, UpdateAreaRequest)>, UpdateAreaRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdatePermissionsRequest>, UpdatePermissionsRequestValidator>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 

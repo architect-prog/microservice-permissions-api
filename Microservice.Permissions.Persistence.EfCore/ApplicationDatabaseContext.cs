@@ -4,36 +4,35 @@ using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Microservice.Permissions.Database
+namespace Microservice.Permissions.Database;
+
+public sealed class ApplicationDatabaseContext : DbContext
 {
-    public sealed class ApplicationDatabaseContext : DbContext
+    private readonly DatabaseSettings databaseSettings;
+
+    public DbSet<AreaEntity> Areas => Set<AreaEntity>();
+    public DbSet<RoleEntity> Roles => Set<RoleEntity>();
+    public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
+    public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
+    public DbSet<PermissionCollectionEntity> PermissionCollections => Set<PermissionCollectionEntity>();
+
+    public ApplicationDatabaseContext(IOptions<DatabaseSettings> databaseSettings)
     {
-        private readonly DatabaseSettings databaseSettings;
+        this.databaseSettings = databaseSettings.Value;
 
-        public DbSet<AreaEntity> Areas => Set<AreaEntity>();
-        public DbSet<RoleEntity> Roles => Set<RoleEntity>();
-        public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
-        public DbSet<ApplicationEntity> Applications => Set<ApplicationEntity>();
-        public DbSet<PermissionCollectionEntity> PermissionCollections => Set<PermissionCollectionEntity>();
+        ChangeTracker.LazyLoadingEnabled = false;
+        ChangeTracker.AutoDetectChangesEnabled = false;
+    }
 
-        public ApplicationDatabaseContext(IOptions<DatabaseSettings> databaseSettings)
-        {
-            this.databaseSettings = databaseSettings.Value;
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
-            ChangeTracker.LazyLoadingEnabled = false;
-            ChangeTracker.AutoDetectChangesEnabled = false;
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseNpgsql(databaseSettings.ConnectionString)
-                .UseSnakeCaseNamingConvention();
-        }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseNpgsql(databaseSettings.ConnectionString)
+            .UseSnakeCaseNamingConvention();
     }
 }

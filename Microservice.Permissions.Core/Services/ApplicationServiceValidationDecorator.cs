@@ -1,101 +1,101 @@
 ﻿using ArchitectProg.Kernel.Extensions.Common;
 using FluentValidation;
+using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Responses.Application;
 using Microservice.Permissions.Core.Services.Interfaces;
 
-namespace Microservice.Permissions.Core.Services
+namespace Microservice.Permissions.Core.Services;
+
+public sealed class ApplicationServiceValidationDecorator : IApplicationService
 {
-    public sealed class ApplicationServiceValidationDecorator : IApplicationService
+    private readonly IApplicationService applicationService;
+    private readonly IValidator<int> identifierValidator;
+    private readonly IValidator<(int?, int?)> skipTakeValidator;
+    private readonly IValidator<CreateApplicationRequest> createApplicationRequestValidator;
+    private readonly IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator;
+
+    public ApplicationServiceValidationDecorator(
+        IApplicationService applicationService,
+        IValidator<int> identifierValidator,
+        IValidator<(int?, int?)> skipTakeValidator,
+        IValidator<CreateApplicationRequest> createApplicationRequestValidator,
+        IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator)
     {
-        private readonly IApplicationService applicationService;
-        private readonly IValidator<int> identifierValidator;
-        private readonly IValidator<(int?, int?)> skipTakeValidator;
-        private readonly IValidator<CreateApplicationRequest> createApplicationRequestValidator;
-        private readonly IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator;
+        this.applicationService = applicationService;
+        this.identifierValidator = identifierValidator;
+        this.skipTakeValidator = skipTakeValidator;
+        this.createApplicationRequestValidator = createApplicationRequestValidator;
+        this.updateApplicationRequestValidator = updateApplicationRequestValidator;
+    }
 
-        public ApplicationServiceValidationDecorator(
-            IApplicationService applicationService,
-            IValidator<int> identifierValidator,
-            IValidator<(int?, int?)> skipTakeValidator,
-            IValidator<CreateApplicationRequest> createApplicationRequestValidator,
-            IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator)
+    public async Task<Result<ApplicationResponse>> Create(CreateApplicationRequest request)
+    {
+        var validationResult = await createApplicationRequestValidator.ValidateAsync(request);
+        if (!validationResult.IsValid)
         {
-            this.applicationService = applicationService;
-            this.identifierValidator = identifierValidator;
-            this.skipTakeValidator = skipTakeValidator;
-            this.createApplicationRequestValidator = createApplicationRequestValidator;
-            this.updateApplicationRequestValidator = updateApplicationRequestValidator;
+            var failureResult = ResultFactory.ValidationFailure<ApplicationResponse>(validationResult.ToString());
+            return failureResult;
         }
 
-        public async Task<Result<ApplicationResponse>> Create(CreateApplicationRequest request)
-        {
-            var validationResult = await createApplicationRequestValidator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                var failureResult = ResultFactory.ValidationFailure<ApplicationResponse>(validationResult.ToString());
-                return failureResult;
-            }
+        return await applicationService.Create(request);
+    }
 
-            return await applicationService.Create(request);
+    public Task<Result<ApplicationResponse>> Get(int applicationId)
+    {
+        var validationResult = identifierValidator.Validate(applicationId);
+        if (!validationResult.IsValid)
+        {
+            var failureResult = ResultFactory
+                .ResourceNotFoundFailure<ApplicationResponse>(validationResult.ToString());
+            return Task.FromResult(failureResult);
         }
 
-        public Task<Result<ApplicationResponse>> Get(int applicationId)
-        {
-            var validationResult = identifierValidator.Validate(applicationId);
-            if (!validationResult.IsValid)
-            {
-                var failureResult = ResultFactory
-                    .ResourceNotFoundFailure<ApplicationResponse>(validationResult.ToString());
-                return Task.FromResult(failureResult);
-            }
+        return applicationService.Get(applicationId);
+    }
 
-            return applicationService.Get(applicationId);
+    public Task<Result<IEnumerable<ApplicationResponse>>> GetAll(int? skip, int? take)
+    {
+        var validationResult = skipTakeValidator.Validate((skip, take));
+        if (!validationResult.IsValid)
+        {
+            var failureResult = ResultFactory
+                .ResourceNotFoundFailure<IEnumerable<ApplicationResponse>>(validationResult.ToString());
+            return Task.FromResult(failureResult);
         }
 
-        public Task<Result<IEnumerable<ApplicationResponse>>> GetAll(int? skip, int? take)
-        {
-            var validationResult = skipTakeValidator.Validate((skip, take));
-            if (!validationResult.IsValid)
-            {
-                var failureResult = ResultFactory
-                    .ResourceNotFoundFailure<IEnumerable<ApplicationResponse>>(validationResult.ToString());
-                return Task.FromResult(failureResult);
-            }
+        return applicationService.GetAll(skip, take);
+    }
 
-            return applicationService.GetAll(skip, take);
+    public async Task<Result> Update(int applicationId, UpdateApplicationRequest request)
+    {
+        var requestValidationResult = await updateApplicationRequestValidator
+            .ValidateAsync((applicationId, request));
+
+        if (!requestValidationResult.IsValid)
+        {
+            var failureResult = ResultFactory.ValidationFailure(requestValidationResult.ToString());
+            return failureResult;
         }
 
-        public async Task<Result> Update(int applicationId, UpdateApplicationRequest request)
+        var result = await applicationService.Update(applicationId, request);
+        return result;
+    }
+
+    public Task<Result> Delete(int applicationId)
+    {
+        var validationResult = identifierValidator.Validate(applicationId);
+        if (!validationResult.IsValid)
         {
-            var requestValidationResult = await updateApplicationRequestValidator
-                .ValidateAsync((applicationId, request));
-
-            if (!requestValidationResult.IsValid)
-            {
-                var failureResult = ResultFactory.ValidationFailure(requestValidationResult.ToString());
-                return failureResult;
-            }
-
-            var result = await applicationService.Update(applicationId, request);
-            return result;
+            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Application);
+            return Task.FromResult(failureResult);
         }
 
-        public Task<Result> Delete(int applicationId)
-        {
-            var validationResult = identifierValidator.Validate(applicationId);
-            if (!validationResult.IsValid)
-            {
-                var failureResult = ResultFactory.ResourceNotFoundFailure(validationResult.ToString());
-                return Task.FromResult(failureResult);
-            }
+        return applicationService.Delete(applicationId);
+    }
 
-            return applicationService.Delete(applicationId);
-        }
-
-        public Task<int> Count()
-        {
-            return applicationService.Count();
-        }
+    public Task<int> Count()
+    {
+        return applicationService.Count();
     }
 }
