@@ -45,7 +45,7 @@ public sealed class EntityFrameworkRepository<T> : IRepository<T> where T : clas
         return context.SaveChangesAsync(token);
     }
 
-    public Task DeleteRange(IEnumerable<T> entities, CancellationToken token = new CancellationToken())
+    public Task DeleteRange(IEnumerable<T> entities, CancellationToken token = new())
     {
         entitiesSet.RemoveRange(entities);
         return context.SaveChangesAsync(token);

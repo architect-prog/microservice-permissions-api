@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microservice.Permissions.Database.Extensions;
 using Microservice.Permissions.Database.Settings;
 using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public sealed class ApplicationDatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.PopulateApplicationData();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
