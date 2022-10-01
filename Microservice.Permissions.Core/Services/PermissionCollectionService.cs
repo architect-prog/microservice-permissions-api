@@ -1,81 +1,84 @@
 ﻿using ArchitectProg.Kernel.Extensions.Common;
 using ArchitectProg.Kernel.Extensions.Interfaces;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
-using Microservice.Permissions.Core.Contracts.Responses.Permission;
-using Microservice.Permissions.Core.Mappers.Interfaces;
+using ArchitectProg.Kernel.Extensions.Specifications;
+using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Database.Specifications.PermissionCollection;
 using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services
 {
     public sealed class PermissionCollectionService : IPermissionCollectionService
     {
-        private readonly IAreaPermissionsMapper areaPermissionsMapper;
+        private readonly IAreaRoleCreator areaRoleCreator;
+        private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IRepository<PermissionCollectionEntity> repository;
+        private readonly IRepository<AreaEntity> areaRepository;
+        private readonly IRepository<RoleEntity> roleRepository;
 
         public PermissionCollectionService(
-            IAreaPermissionsMapper areaPermissionsMapper,
-            IRepository<PermissionCollectionEntity> repository)
+            IAreaRoleCreator areaRoleCreator,
+            IUnitOfWorkFactory unitOfWorkFactory,
+            IRepository<PermissionCollectionEntity> repository,
+            IRepository<AreaEntity> areaRepository,
+            IRepository<RoleEntity> roleRepository)
         {
-            this.areaPermissionsMapper = areaPermissionsMapper;
+            this.areaRoleCreator = areaRoleCreator;
+            this.unitOfWorkFactory = unitOfWorkFactory;
             this.repository = repository;
+            this.areaRepository = areaRepository;
+            this.roleRepository = roleRepository;
         }
 
-        public async Task<Result<IEnumerable<PermissionCollectionResponse>>> Create(CreatePermissionsRequest request)
+        public async Task<Result<IEnumerable<int>>> CreateForRole(int roleId)
         {
-            var specification = new AreaPermissionCollectionsSpecification(request.AreaId);
-            var permissionCollections = await repository.List(specification);
+            var role = await roleRepository.GetOrDefault(roleId);
+            var areas = await areaRepository.List(SpecificationFactory.AllSpecification<AreaEntity>());
 
-            foreach (var collection in permissionCollections)
+            if (role is null)
             {
-                var permissions = request.Permissions.Select(x => new PermissionEntity
-                {
-                    Name = x.Name,
-                    HaveAccess = x.HasAccess,
-                    PermissionCollectionId = collection.Id
-                });
-
-                //collection.Permissions.AddRange();
+                var failureResult = ResultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(role));
+                return failureResult;
             }
 
-            var result = areaPermissionsMapper.MapCollection(permissionCollections).ToArray();
+            var areaIds = areas.Select(x => x.Id);
+            var areaRoles = areaRoleCreator
+                .CreateForRole(role.Id, areaIds)
+                .ToArray();
+
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.AddRange(areaRoles);
+                await transaction.Commit();
+            }
+
+            var result = areaRoles.Select(x => x.Id).ToArray();
             return result;
         }
 
-        public async Task<Result<IEnumerable<PermissionCollectionResponse>>> GetAll(int[]? areaIds, int[]? roleIds)
+        public async Task<Result<IEnumerable<int>>> CreateForArea(int areaId)
         {
-            var specification = new PermissionCollectionsSpecification(areaIds, roleIds);
-            var permissionCollections = await repository.List(specification);
+            var area = await areaRepository.GetOrDefault(areaId);
+            var roles = await roleRepository.List(SpecificationFactory.AllSpecification<RoleEntity>());
 
-            var result = areaPermissionsMapper.MapCollection(permissionCollections).ToArray();
-            return result;
-        }
-
-        public async Task<Result<(int roleId, int areaId)>> CreateOrUpdate(UpdatePermissionsRequest request)
-        {
-            var specification = new AreaPermissionCollectionsSpecification(request.AreaId);
-            var permissions = await repository.List(specification);
-
-            foreach (var permission in permissions)
+            if (area is null)
             {
-                foreach (var permissionRequest in request.Permissions)
-                {
-                    permission.Permissions.Add(new PermissionEntity
-                    {
-                        Name = permissionRequest.Name,
-                        HaveAccess = permissionRequest.HasAccess
-                    });
-                }
+                var failureResult = ResultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(area));
+                return failureResult;
             }
 
-            return new Result<(int roleId, int areaId)>((1, 1));
+            var roleIds = roles.Select(x => x.Id);
+            var areaRoles = areaRoleCreator
+                .CreateForArea(areaId, roleIds)
+                .ToArray();
+
+            using (var transaction = unitOfWorkFactory.BeginTransaction())
+            {
+                await repository.AddRange(areaRoles);
+                await transaction.Commit();
+            }
+
+            var result = areaRoles.Select(x => x.Id).ToArray();
+            return result;
         }
-
-
-        // public async Task<IEnumerable<PermissionsResponse>> GetAll(string application, string role, string area)
-        // {
-        //     return new[] {new PermissionsResponse()};
-        // }
     }
 }

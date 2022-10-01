@@ -14,10 +14,14 @@ namespace Microservice.Permissions.Api.Controllers
     public sealed class AreasController : ControllerBase
     {
         private readonly IAreaService areaService;
+        private readonly IPermissionService permissionService;
 
-        public AreasController(IAreaService areaService)
+        public AreasController(
+            IAreaService areaService,
+            IPermissionService permissionService)
         {
             this.areaService = areaService;
+            this.permissionService = permissionService;
         }
 
         [ProducesBadRequest]

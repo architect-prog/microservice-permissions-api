@@ -15,7 +15,8 @@ namespace Microservice.Permissions.Database.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true)
+                    name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true),
+                    description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,32 +57,25 @@ namespace Microservice.Permissions.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "accesses",
+                name: "permission_collections",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     area_id = table.Column<int>(type: "integer", nullable: false),
-                    role_id = table.Column<int>(type: "integer", nullable: false),
-                    application_id = table.Column<int>(type: "integer", nullable: false)
+                    role_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_accesses", x => x.id);
+                    table.PrimaryKey("pk_permission_collections", x => x.id);
                     table.ForeignKey(
-                        name: "fk_accesses_applications_application_id",
-                        column: x => x.application_id,
-                        principalTable: "applications",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_accesses_areas_area_id",
+                        name: "fk_permission_collections_areas_area_id",
                         column: x => x.area_id,
                         principalTable: "areas",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_accesses_roles_role_id",
+                        name: "fk_permission_collections_roles_role_id",
                         column: x => x.role_id,
                         principalTable: "roles",
                         principalColumn: "id",
@@ -96,43 +90,52 @@ namespace Microservice.Permissions.Database.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
                     have_access = table.Column<bool>(type: "boolean", nullable: false),
-                    access_id = table.Column<int>(type: "integer", nullable: false)
+                    permission_collection_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_permissions", x => x.id);
                     table.ForeignKey(
-                        name: "fk_permissions_accesses_access_id",
-                        column: x => x.access_id,
-                        principalTable: "accesses",
+                        name: "fk_permissions_permission_collections_permission_collection_id",
+                        column: x => x.permission_collection_id,
+                        principalTable: "permission_collections",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_accesses_application_id",
-                table: "accesses",
-                column: "application_id");
+                name: "ix_applications_name",
+                table: "applications",
+                column: "name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_accesses_area_id",
-                table: "accesses",
+                name: "ix_areas_application_id_name",
+                table: "areas",
+                columns: new[] { "application_id", "name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_permission_collections_area_id",
+                table: "permission_collections",
                 column: "area_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_accesses_role_id",
-                table: "accesses",
+                name: "ix_permission_collections_role_id",
+                table: "permission_collections",
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_areas_application_id",
-                table: "areas",
-                column: "application_id");
+                name: "ix_permissions_permission_collection_id_name",
+                table: "permissions",
+                columns: new[] { "permission_collection_id", "name" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_permissions_access_id",
-                table: "permissions",
-                column: "access_id");
+                name: "ix_roles_name",
+                table: "roles",
+                column: "name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -141,7 +144,7 @@ namespace Microservice.Permissions.Database.Migrations
                 name: "permissions");
 
             migrationBuilder.DropTable(
-                name: "accesses");
+                name: "permission_collections");
 
             migrationBuilder.DropTable(
                 name: "areas");

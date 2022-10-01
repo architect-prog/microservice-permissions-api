@@ -11,11 +11,11 @@ namespace Microservice.Permissions.Api.Controllers
     [Route("api/permissions")]
     public sealed class PermissionsController : ControllerBase
     {
-        private readonly IPermissionCollectionService permissionCollectionService;
+        private readonly IPermissionService permissionService;
 
-        public PermissionsController(IPermissionCollectionService permissionCollectionService)
+        public PermissionsController(IPermissionService permissionService)
         {
-            this.permissionCollectionService = permissionCollectionService;
+            this.permissionService = permissionService;
         }
 
         [ProducesBadRequest]
@@ -23,7 +23,7 @@ namespace Microservice.Permissions.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreatePermissionsRequest request)
         {
-            var result = await permissionCollectionService.Create(request);
+            var result = await permissionService.Create(request);
             var response = result.MatchActionResult(x => CreatedAtAction("GetAll", new { }, x));
 
             return response;
@@ -34,24 +34,32 @@ namespace Microservice.Permissions.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int[]? areaIds, [FromQuery] int[]? roleIds)
         {
-            var permissions = await permissionCollectionService.GetAll(roleIds, areaIds);
-            return Ok(permissions);
+            var result = await permissionService.GetAll(roleIds, areaIds);
+            var response = result.MatchActionResult(x => Ok(x));
+
+            return response;
         }
 
-        [ProducesOk(typeof(IEnumerable<PermissionCollectionResponse>))]
-        [HttpGet("areas/{areaId:int}/roles/{roleId:int}")]
-        public async Task<IActionResult> Get(int roleId, int areaId)
+        [ProducesNotFound]
+        [ProducesNoContent]
+        [HttpPut]
+        public async Task<IActionResult> Update(UpdatePermissionsRequest request)
         {
-            var permissions = await permissionCollectionService.GetAll(new[] {roleId}, new[] {areaId});
-            return Ok(permissions);
+            var result = await permissionService.Update(request);
+            var response = result.MatchActionResult(() => NoContent());
+
+            return response;
         }
 
-        // [ProducesOk(typeof(IEnumerable<PermissionsResponse>))]
-        // [HttpGet("applications/{application}/areas/{area}/roles/{role}")]
-        // public async Task<IActionResult> Permissions(string application, string role, string area)
-        // {
-        //     var permissions = await permissionService.GetAll(null, null);
-        //     return Ok(permissions);
-        // }
+        [ProducesNotFound]
+        [ProducesNoContent]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int areaId, string[] permission)
+        {
+            var result = await permissionService.Delete(areaId, permission);
+            var response = result.MatchActionResult(() => NoContent());
+
+            return response;
+        }
     }
 }

@@ -7,13 +7,13 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Mappers
 {
-    public sealed class AreaPermissionsMapper :
+    public sealed class PermissionCollectionMapper :
         Mapper<PermissionCollectionEntity, PermissionCollectionResponse>,
-        IAreaPermissionsMapper
+        IPermissionCollectionMapper
     {
         private readonly IPermissionMapper permissionMapper;
 
-        public AreaPermissionsMapper(IPermissionMapper permissionMapper)
+        public PermissionCollectionMapper(IPermissionMapper permissionMapper)
         {
             this.permissionMapper = permissionMapper;
         }

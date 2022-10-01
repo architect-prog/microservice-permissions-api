@@ -8,7 +8,7 @@
  
     <ItemGroup>
       <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="1.2.5" />
-      <PackageReference Include="ArchitectProg.Kernel.Extensions" Version="1.0.11" />
+      <PackageReference Include="ArchitectProg.Kernel.Extensions" Version="1.0.12" />
     </ItemGroup>
 
 </Project>

@@ -54,18 +54,19 @@ builder.Services.AddScoped<IRoleCreator, RoleCreator>();
 builder.Services.AddScoped<IAreaCreator, AreaCreator>();
 builder.Services.AddScoped<IAreaRoleCreator, AreaRoleCreator>();
 builder.Services.AddScoped<IApplicationCreator, ApplicationCreator>();
+builder.Services.AddScoped<IPermissionCreator, PermissionCreator>();
 
 builder.Services.AddScoped<IAreaMapper, AreaMapper>();
 builder.Services.AddScoped<IRoleMapper, RoleMapper>();
 builder.Services.AddScoped<IPermissionMapper, PermissionMapper>();
 builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
-builder.Services.AddScoped<IAreaPermissionsMapper, AreaPermissionsMapper>();
+builder.Services.AddScoped<IPermissionCollectionMapper, PermissionCollectionMapper>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPermissionCollectionService, PermissionCollectionService>();
-builder.Services.AddScoped<IAreaRoleService, AreaRoleService>();
 
 builder.Services.Decorate<IRoleService, RoleServiceValidationDecorator>();
 builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
@@ -98,7 +99,9 @@ app.UseCors(policy =>
         .GetSection("AllowedCorsOrigins")
         .Get<string[]>();
 
-    policy.WithOrigins(corsOrigins);
+    policy.WithOrigins(corsOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
 });
 
 app.UseHttpsRedirection();

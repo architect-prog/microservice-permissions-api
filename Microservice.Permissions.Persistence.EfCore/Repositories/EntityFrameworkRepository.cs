@@ -1,5 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions;
-using ArchitectProg.Kernel.Extensions.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Interfaces;
+using ArchitectProg.Kernel.Extensions.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Database.Repositories
@@ -42,6 +42,12 @@ namespace Microservice.Permissions.Database.Repositories
         public Task Delete(T entity, CancellationToken token = default)
         {
             entitiesSet.Remove(entity);
+            return context.SaveChangesAsync(token);
+        }
+
+        public Task DeleteRange(IEnumerable<T> entities, CancellationToken token = new CancellationToken())
+        {
+            entitiesSet.RemoveRange(entities);
             return context.SaveChangesAsync(token);
         }
 

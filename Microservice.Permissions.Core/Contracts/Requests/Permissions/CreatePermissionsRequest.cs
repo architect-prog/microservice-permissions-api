@@ -3,12 +3,14 @@
     public sealed class CreatePermissionsRequest
     {
         public int AreaId { get; }
+        public int RoleId { get; }
         public IEnumerable<PermissionRequest> Permissions { get; }
 
-        public CreatePermissionsRequest(int areaId, IEnumerable<PermissionRequest> permissions)
+        public CreatePermissionsRequest(int roleId, int areaId, IEnumerable<PermissionRequest> permissions)
         {
-            AreaId = areaId;
             Permissions = permissions;
+            RoleId = roleId;
+            AreaId = areaId;
         }
     }
 }

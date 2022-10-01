@@ -1,5 +1,6 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 using Microservice.Permissions.Kernel.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Database.Specifications.PermissionCollection
 {
@@ -12,6 +13,13 @@ namespace Microservice.Permissions.Database.Specifications.PermissionCollection
         {
             this.areaIds = areaIds;
             this.roleIds = roleIds;
+        }
+
+        public override IQueryable<PermissionCollectionEntity> AddEagerFetching(
+            IQueryable<PermissionCollectionEntity> query)
+        {
+            var result = query.Include(x => x.Permissions);
+            return result;
         }
 
         public override IQueryable<PermissionCollectionEntity> AddPredicates(

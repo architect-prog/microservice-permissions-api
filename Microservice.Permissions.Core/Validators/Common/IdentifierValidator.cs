@@ -8,6 +8,6 @@ public sealed class IdentifierValidator : AbstractValidator<int>
     {
         RuleFor(x => x)
             .GreaterThan(0)
-            .WithMessage("'Identifier' must be greater than '0'.");;
+            .WithMessage("'Identifier' must be greater than '0'.");
     }
 }

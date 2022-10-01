@@ -14,20 +14,20 @@ namespace Microservice.Permissions.Core.Services
     {
         private readonly IRoleCreator roleCreator;
         private readonly IRoleMapper roleMapper;
-        private readonly IAreaRoleService areaRoleService;
+        private readonly IPermissionCollectionService permissionCollectionService;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IRepository<RoleEntity> repository;
 
         public RoleService(
             IRoleCreator roleCreator,
             IRoleMapper roleMapper,
-            IAreaRoleService areaRoleService,
+            IPermissionCollectionService permissionCollectionService,
             IUnitOfWorkFactory unitOfWorkFactory,
             IRepository<RoleEntity> repository)
         {
             this.roleCreator = roleCreator;
             this.roleMapper = roleMapper;
-            this.areaRoleService = areaRoleService;
+            this.permissionCollectionService = permissionCollectionService;
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.repository = repository;
         }
@@ -38,7 +38,7 @@ namespace Microservice.Permissions.Core.Services
             using (var transaction = unitOfWorkFactory.BeginTransaction())
             {
                 await repository.Add(role);
-                await areaRoleService.CreateForRole(role.Id);
+                await permissionCollectionService.CreateForRole(role.Id);
                 await transaction.Commit();
             }
 

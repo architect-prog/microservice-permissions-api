@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Microservice.Permissions.Database.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    [Migration("20220927221235_AddUniqueConstrainsToNames")]
-    partial class AddUniqueConstrainsToNames
+    [Migration("20221001100938_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,7 +79,7 @@ namespace Microservice.Permissions.Database.Migrations
                     b.ToTable("areas", (string)null);
                 });
 
-            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.AreaRolePermissionsEntity", b =>
+            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionCollectionEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,15 +97,15 @@ namespace Microservice.Permissions.Database.Migrations
                         .HasColumnName("role_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_area_role_permissions");
+                        .HasName("pk_permission_collections");
 
                     b.HasIndex("AreaId")
-                        .HasDatabaseName("ix_area_role_permissions_area_id");
+                        .HasDatabaseName("ix_permission_collections_area_id");
 
                     b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_area_role_permissions_role_id");
+                        .HasDatabaseName("ix_permission_collections_role_id");
 
-                    b.ToTable("area_role_permissions", (string)null);
+                    b.ToTable("permission_collections", (string)null);
                 });
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionEntity", b =>
@@ -117,10 +117,6 @@ namespace Microservice.Permissions.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AreaRolePermissionsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("area_role_permissions_id");
-
                     b.Property<bool>("HaveAccess")
                         .HasColumnType("boolean")
                         .HasColumnName("have_access");
@@ -130,12 +126,16 @@ namespace Microservice.Permissions.Database.Migrations
                         .HasColumnType("character varying(32)")
                         .HasColumnName("name");
 
+                    b.Property<int>("PermissionCollectionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_collection_id");
+
                     b.HasKey("Id")
                         .HasName("pk_permissions");
 
-                    b.HasIndex("AreaRolePermissionsId", "Name")
+                    b.HasIndex("PermissionCollectionId", "Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_permissions_area_role_permissions_id_name");
+                        .HasDatabaseName("ix_permissions_permission_collection_id_name");
 
                     b.ToTable("permissions", (string)null);
                 });
@@ -176,21 +176,21 @@ namespace Microservice.Permissions.Database.Migrations
                     b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.AreaRolePermissionsEntity", b =>
+            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionCollectionEntity", b =>
                 {
                     b.HasOne("Microservice.Permissions.Kernel.Entities.AreaEntity", "Area")
                         .WithMany("AreaRolePermissions")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_area_role_permissions_areas_area_id");
+                        .HasConstraintName("fk_permission_collections_areas_area_id");
 
                     b.HasOne("Microservice.Permissions.Kernel.Entities.RoleEntity", "Role")
                         .WithMany("AreaRolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_area_role_permissions_roles_role_id");
+                        .HasConstraintName("fk_permission_collections_roles_role_id");
 
                     b.Navigation("Area");
 
@@ -199,14 +199,14 @@ namespace Microservice.Permissions.Database.Migrations
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionEntity", b =>
                 {
-                    b.HasOne("Microservice.Permissions.Kernel.Entities.AreaRolePermissionsEntity", "AreaRolePermissions")
+                    b.HasOne("Microservice.Permissions.Kernel.Entities.PermissionCollectionEntity", "PermissionCollection")
                         .WithMany("Permissions")
-                        .HasForeignKey("AreaRolePermissionsId")
+                        .HasForeignKey("PermissionCollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permissions_area_role_permissions_area_role_permissions_id");
+                        .HasConstraintName("fk_permissions_permission_collections_permission_collection_id");
 
-                    b.Navigation("AreaRolePermissions");
+                    b.Navigation("PermissionCollection");
                 });
 
             modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.ApplicationEntity", b =>
@@ -219,7 +219,7 @@ namespace Microservice.Permissions.Database.Migrations
                     b.Navigation("AreaRolePermissions");
                 });
 
-            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.AreaRolePermissionsEntity", b =>
+            modelBuilder.Entity("Microservice.Permissions.Kernel.Entities.PermissionCollectionEntity", b =>
                 {
                     b.Navigation("Permissions");
                 });

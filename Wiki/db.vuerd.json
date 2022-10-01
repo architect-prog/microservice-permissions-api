@@ -3,8 +3,8 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -400.32001527099635,
-    "scrollLeft": -426.2400162597665,
+    "scrollTop": -412.8000157470706,
+    "scrollLeft": -355.2000135498056,
     "zoomLevel": 0.8,
     "show": {
       "tableComment": true,
@@ -120,7 +120,7 @@
           "active": false,
           "left": 1300.7994,
           "top": 510.5001,
-          "zIndex": 9,
+          "zIndex": 5,
           "widthName": 64.15625,
           "widthComment": 60
         },
@@ -275,7 +275,7 @@
         "id": "78dfa5fb-f583-46aa-b372-0e0a0032b4bf"
       },
       {
-        "name": "area_role_permissions",
+        "name": "permission_collection",
         "comment": "",
         "columns": [
           {
@@ -352,8 +352,8 @@
           "active": false,
           "left": 795.0134,
           "top": 781.9204,
-          "zIndex": 5,
-          "widthName": 133.5107421875,
+          "zIndex": 9,
+          "widthName": 126.28076171875,
           "widthComment": 60
         },
         "visible": true,
@@ -460,7 +460,7 @@
           "active": false,
           "left": 748.8651,
           "top": 1089.04,
-          "zIndex": 8,
+          "zIndex": 4,
           "widthName": 64.8544921875,
           "widthComment": 60,
           "color": "#000000"
