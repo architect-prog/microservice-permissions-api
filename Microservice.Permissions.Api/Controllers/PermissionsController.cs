@@ -1,6 +1,6 @@
 ﻿using ArchitectProg.WebApi.Extensions.Attributes;
 using Microservice.Permissions.Api.Extensions;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
+using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

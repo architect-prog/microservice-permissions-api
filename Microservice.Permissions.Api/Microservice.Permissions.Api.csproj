@@ -17,4 +17,8 @@
         <ProjectReference Include="..\Microservice.Permissions.Core\Microservice.Permissions.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="appsettings.Development.json" />
+    </ItemGroup>
+
 </Project>

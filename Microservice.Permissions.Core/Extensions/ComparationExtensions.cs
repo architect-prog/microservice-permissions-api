@@ -1,5 +1,5 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
+using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Extensions;

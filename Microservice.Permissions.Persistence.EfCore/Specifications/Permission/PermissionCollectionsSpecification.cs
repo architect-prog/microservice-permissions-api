@@ -2,7 +2,7 @@
 using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Microservice.Permissions.Database.Specifications.PermissionCollection;
+namespace Microservice.Permissions.Database.Specifications.Permission;
 
 public sealed class PermissionCollectionsSpecification : Specification<PermissionCollectionEntity>
 {

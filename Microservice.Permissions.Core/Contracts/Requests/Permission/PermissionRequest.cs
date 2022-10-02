@@ -1,4 +1,4 @@
-﻿namespace Microservice.Permissions.Core.Contracts.Requests.Permissions;
+﻿namespace Microservice.Permissions.Core.Contracts.Requests.Permission;
 
 public sealed class PermissionRequest
 {

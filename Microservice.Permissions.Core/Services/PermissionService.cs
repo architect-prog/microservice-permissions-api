@@ -1,12 +1,12 @@
 ﻿using ArchitectProg.Kernel.Extensions.Common;
 using ArchitectProg.Kernel.Extensions.Interfaces;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
+using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Extensions;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Database.Specifications.PermissionCollection;
+using Microservice.Permissions.Database.Specifications.Permission;
 using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Services;

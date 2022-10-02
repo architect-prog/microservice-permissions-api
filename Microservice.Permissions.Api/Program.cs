@@ -3,9 +3,10 @@ using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
+using Microservice.Permissions.Api.Extensions;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
+using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Creators;
 using Microservice.Permissions.Core.Creators.Interfaces;
@@ -22,6 +23,7 @@ using Microservice.Permissions.Database;
 using Microservice.Permissions.Database.Repositories;
 using Microservice.Permissions.Database.Services;
 using Microservice.Permissions.Database.Settings;
+using Microservice.Permissions.Kernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ValidationException = ArchitectProg.Kernel.Extensions.Exceptions.ValidationException;
@@ -76,10 +78,6 @@ builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
 builder.Services.Decorate<IApplicationService, ApplicationServiceValidationDecorator>();
 builder.Services.Decorate<IPermissionService, PermissionServiceValidationDecorator>();
 
-builder.Services.AddDbContext<ApplicationDatabaseContext>();
-builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
-builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
-
 builder.Services.AddScoped<IValidator<int>, IdentifierValidator>();
 builder.Services.AddScoped<IValidator<int[]>, IdentifierArrayValidator>();
 builder.Services.AddScoped<IValidator<string[]>, PermissionNamesValidator>();
@@ -92,11 +90,17 @@ builder.Services.AddScoped<IValidator<CreateAreaRequest>, CreateAreaRequestValid
 builder.Services.AddScoped<IValidator<(int, UpdateAreaRequest)>, UpdateAreaRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdatePermissionsRequest>, UpdatePermissionsRequestValidator>();
 
+builder.Services.AddDbContext<ApplicationDatabaseContext>();
+builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
+builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
+builder.Services.AddScoped<IDatabaseMigrationApplier, DatabaseMigrationApplier>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 
 var app = builder.Build();
+
+app.ApplyMigrations();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -114,5 +118,4 @@ app.UseCors(policy =>
 app.UseHttpsRedirection();
 
 app.MapControllers();
-
 app.Run();

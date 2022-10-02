@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Common;
 using FluentValidation;
 using Microservice.Permissions.Core.Constants;
-using Microservice.Permissions.Core.Contracts.Requests.Permissions;
+using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Services.Interfaces;
 

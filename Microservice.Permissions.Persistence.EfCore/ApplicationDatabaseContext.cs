@@ -3,6 +3,7 @@ using Microservice.Permissions.Database.Extensions;
 using Microservice.Permissions.Database.Settings;
 using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Microservice.Permissions.Database;
