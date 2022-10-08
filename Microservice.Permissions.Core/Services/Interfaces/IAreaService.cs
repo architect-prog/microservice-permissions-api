@@ -11,5 +11,5 @@ public interface IAreaService
     Task<Result<IEnumerable<AreaResponse>>> GetAll(int? applicationId, int? skip, int? take);
     Task<Result> Update(int areaId, UpdateAreaRequest request);
     Task<Result> Delete(int areaId);
-    Task<int> Count();
+    Task<int> Count(int? applicationId);
 }

@@ -91,8 +91,8 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         return areaService.Delete(areaId);
     }
 
-    public Task<int> Count()
+    public Task<int> Count(int? applicationId)
     {
-        return areaService.Count();
+        return areaService.Count(applicationId);
     }
 }

@@ -104,9 +104,13 @@ public sealed class AreaService : IAreaService
         return ResultFactory.Success();
     }
 
-    public Task<int> Count()
+    public Task<int> Count(int? applicationId)
     {
-        var result = repository.Count(SpecificationFactory.AllSpecification<AreaEntity>());
+        var specification = applicationId.HasValue
+            ? new ApplicationAreasSpecification(applicationId.Value)
+            : SpecificationFactory.AllSpecification<AreaEntity>();
+
+        var result = repository.Count(specification);
         return result;
     }
 }

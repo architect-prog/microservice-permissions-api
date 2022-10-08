@@ -51,7 +51,7 @@ public sealed class AreasController : ControllerBase
     public async Task<IActionResult> GetAll(int? applicationId, int? skip, int? take)
     {
         var result = await areaService.GetAll(applicationId, skip, take);
-        var count = await areaService.Count();
+        var count = await areaService.Count(applicationId);
 
         var response = result.MatchActionResult(x => Ok(x?.WrapCollection(count)));
         return response;
