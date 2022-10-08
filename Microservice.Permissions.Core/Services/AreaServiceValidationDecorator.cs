@@ -55,11 +55,22 @@ public sealed class AreaServiceValidationDecorator : IAreaService
 
     public Task<Result<IEnumerable<AreaResponse>>> GetAll(int? applicationId, int? skip, int? take)
     {
+        if (applicationId.HasValue)
+        {
+            var identifierValidationResult = identifierValidator.Validate(applicationId.Value);
+            if (!identifierValidationResult.IsValid)
+            {
+                var failureResult = ResultFactory
+                    .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(Names.Area);
+                return Task.FromResult(failureResult);
+            }
+        }
+
         var validationResult = skipTakeValidator.Validate((skip, take));
         if (!validationResult.IsValid)
         {
             var failureResult = ResultFactory
-                .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(validationResult.ToString());
+                .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(Names.Area);
             return Task.FromResult(failureResult);
         }
 
