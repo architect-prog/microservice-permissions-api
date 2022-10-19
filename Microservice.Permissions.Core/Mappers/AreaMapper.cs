@@ -9,13 +9,7 @@ public sealed class AreaMapper : Mapper<AreaEntity, AreaResponse>, IAreaMapper
 {
     public override AreaResponse Map(AreaEntity source)
     {
-        var result = new AreaResponse
-        {
-            Id = source.Id,
-            ApplicationId = source.ApplicationId,
-            Name = source.Name
-        };
-
+        var result = new AreaResponse(source.Id, source.ApplicationId, source.Name);
         return result;
     }
 }

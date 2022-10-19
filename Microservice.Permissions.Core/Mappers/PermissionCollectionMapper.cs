@@ -19,12 +19,10 @@ public sealed class PermissionCollectionMapper :
     public override PermissionCollectionResponse Map(PermissionCollectionEntity source)
     {
         var permissions = source.Permissions.ToArray();
-        var result = new PermissionCollectionResponse
-        {
-            RoleId = source.RoleId,
-            AreaId = source.AreaId,
-            CustomPermissions = permissionMapper.MapCollection(permissions)
-        };
+        var result = new PermissionCollectionResponse(
+            source.RoleId,
+            source.AreaId,
+            permissionMapper.MapCollection(permissions));
 
         return result;
     }

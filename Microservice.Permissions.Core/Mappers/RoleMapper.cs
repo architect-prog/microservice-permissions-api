@@ -9,12 +9,7 @@ public sealed class RoleMapper : Mapper<RoleEntity, RoleResponse>, IRoleMapper
 {
     public override RoleResponse Map(RoleEntity source)
     {
-        var result = new RoleResponse
-        {
-            Id = source.Id,
-            Name = source.Name
-        };
-
+        var result = new RoleResponse(source.Id, source.Name);
         return result;
     }
 }

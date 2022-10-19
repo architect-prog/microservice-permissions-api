@@ -38,14 +38,12 @@ public sealed class PermissionCollectionDetailsMapper :
         var canDeletePermission = defaultPermissions
             .FirstOrDefault(x => x.Name.EqualsIgnoreCase(PermissionConstants.CanDelete));
 
-        var result = new PermissionCollectionDetailsResponse
-        {
-            CanRead = canReadPermission?.HaveAccess ?? false,
-            CanCreate = canCreatePermission?.HaveAccess ?? false,
-            CanUpdate = canUpdatePermission?.HaveAccess ?? false,
-            CanDelete = canDeletePermission?.HaveAccess ?? false,
-            CustomPermissions = permissionMapper.MapCollection(customPermissions)
-        };
+        var result = new PermissionCollectionDetailsResponse(
+            canCreatePermission?.HaveAccess ?? false,
+            canReadPermission?.HaveAccess ?? false,
+            canUpdatePermission?.HaveAccess ?? false,
+            canDeletePermission?.HaveAccess ?? false,
+            permissionMapper.MapCollection(customPermissions));
 
         return result;
     }

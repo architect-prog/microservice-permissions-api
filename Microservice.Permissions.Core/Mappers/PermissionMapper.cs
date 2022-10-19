@@ -12,12 +12,7 @@ public sealed class PermissionMapper : Mapper<PermissionEntity, PermissionRespon
     public override PermissionResponse Map(PermissionEntity source)
     {
         var isDefault = PermissionConstants.Defaults.Any(x => source.Name.EqualsIgnoreCase(x));
-        var result = new PermissionResponse
-        {
-            Name = source.Name,
-            HaveAccess = source.HaveAccess,
-            IsDefault = isDefault
-        };
+        var result = new PermissionResponse(source.Name, source.HaveAccess, isDefault);
 
         return result;
     }

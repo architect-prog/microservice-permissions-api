@@ -9,13 +9,7 @@ public sealed class ApplicationMapper : Mapper<ApplicationEntity, ApplicationRes
 {
     public override ApplicationResponse Map(ApplicationEntity source)
     {
-        var result = new ApplicationResponse
-        {
-            Id = source.Id,
-            Name = source.Name,
-            Description = source.Description
-        };
-
+        var result = new ApplicationResponse(source.Id, source.Name, source.Description);
         return result;
     }
 }
