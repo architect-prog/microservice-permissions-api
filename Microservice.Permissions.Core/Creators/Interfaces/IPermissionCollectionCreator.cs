@@ -2,7 +2,7 @@
 
 namespace Microservice.Permissions.Core.Creators.Interfaces;
 
-public interface IAreaRoleCreator
+public interface IPermissionCollectionCreator
 {
     PermissionCollectionEntity Create(int roleId, int areaId);
     IEnumerable<PermissionCollectionEntity> CreateForRole(int roleId, IEnumerable<int> areaIds);

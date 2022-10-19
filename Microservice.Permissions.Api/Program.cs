@@ -10,6 +10,8 @@ using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Creators;
 using Microservice.Permissions.Core.Creators.Interfaces;
+using Microservice.Permissions.Core.Factories;
+using Microservice.Permissions.Core.Factories.Interfaces;
 using Microservice.Permissions.Core.Mappers;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services;
@@ -56,7 +58,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddScoped<IRoleCreator, RoleCreator>();
 builder.Services.AddScoped<IAreaCreator, AreaCreator>();
-builder.Services.AddScoped<IAreaRoleCreator, AreaRoleCreator>();
+builder.Services.AddScoped<IPermissionCollectionCreator, PermissionCollectionCreator>();
 builder.Services.AddScoped<IApplicationCreator, ApplicationCreator>();
 builder.Services.AddScoped<IPermissionCreator, PermissionCreator>();
 
@@ -66,6 +68,8 @@ builder.Services.AddScoped<IPermissionMapper, PermissionMapper>();
 builder.Services.AddScoped<IApplicationMapper, ApplicationMapper>();
 builder.Services.AddScoped<IPermissionCollectionMapper, PermissionCollectionMapper>();
 builder.Services.AddScoped<IPermissionCollectionDetailsMapper, PermissionCollectionDetailsMapper>();
+
+builder.Services.AddScoped<IDefaultPermissionFactory, DefaultPermissionFactory>();
 
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IRoleService, RoleService>();

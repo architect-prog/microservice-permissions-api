@@ -3,7 +3,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Core.Creators;
 
-public sealed class AreaRoleCreator : IAreaRoleCreator
+public sealed class PermissionCollectionCreator : IPermissionCollectionCreator
 {
     public PermissionCollectionEntity Create(int roleId, int areaId)
     {

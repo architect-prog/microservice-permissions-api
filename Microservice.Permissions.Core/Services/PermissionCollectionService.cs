@@ -9,20 +9,20 @@ namespace Microservice.Permissions.Core.Services;
 
 public sealed class PermissionCollectionService : IPermissionCollectionService
 {
-    private readonly IAreaRoleCreator areaRoleCreator;
+    private readonly IPermissionCollectionCreator permissionCollectionCreator;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<PermissionCollectionEntity> repository;
     private readonly IRepository<AreaEntity> areaRepository;
     private readonly IRepository<RoleEntity> roleRepository;
 
     public PermissionCollectionService(
-        IAreaRoleCreator areaRoleCreator,
+        IPermissionCollectionCreator permissionCollectionCreator,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<PermissionCollectionEntity> repository,
         IRepository<AreaEntity> areaRepository,
         IRepository<RoleEntity> roleRepository)
     {
-        this.areaRoleCreator = areaRoleCreator;
+        this.permissionCollectionCreator = permissionCollectionCreator;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.repository = repository;
         this.areaRepository = areaRepository;
@@ -41,17 +41,17 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
         }
 
         var areaIds = areas.Select(x => x.Id);
-        var areaRoles = areaRoleCreator
+        var permissionCollections = permissionCollectionCreator
             .CreateForRole(role.Id, areaIds)
             .ToArray();
 
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
-            await repository.AddRange(areaRoles);
+            await repository.AddRange(permissionCollections);
             await transaction.Commit();
         }
 
-        var result = areaRoles.Select(x => x.Id).ToArray();
+        var result = permissionCollections.Select(x => x.Id).ToArray();
         return result;
     }
 
@@ -67,17 +67,19 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
         }
 
         var roleIds = roles.Select(x => x.Id);
-        var areaRoles = areaRoleCreator
+        var permissionCollections = permissionCollectionCreator
             .CreateForArea(areaId, roleIds)
             .ToArray();
 
         using (var transaction = unitOfWorkFactory.BeginTransaction())
         {
-            await repository.AddRange(areaRoles);
+            await repository.AddRange(permissionCollections);
             await transaction.Commit();
         }
 
-        var result = areaRoles.Select(x => x.Id).ToArray();
+        var result = permissionCollections.Select(x => x.Id).ToArray();
         return result;
     }
+
+
 }
