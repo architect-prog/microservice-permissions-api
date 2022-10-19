@@ -4,4 +4,5 @@ public sealed class PermissionResponse
 {
     public string? Name { get; init; }
     public bool HaveAccess { get; init; }
+    public bool IsDefault { get; init; }
 }
