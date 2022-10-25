@@ -6,8 +6,8 @@ using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Database.Specifications.Area;
 using Microservice.Permissions.Kernel.Entities;
+using Microservice.Permissions.Persistence.EfCore.Specifications.Area;
 
 namespace Microservice.Permissions.Core.Services;
 

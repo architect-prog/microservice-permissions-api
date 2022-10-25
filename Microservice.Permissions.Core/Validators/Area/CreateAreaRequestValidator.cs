@@ -2,8 +2,8 @@
 using ArchitectProg.Kernel.Extensions.Specifications;
 using FluentValidation;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
-using Microservice.Permissions.Database.Specifications.Area;
 using Microservice.Permissions.Kernel.Entities;
+using Microservice.Permissions.Persistence.EfCore.Specifications.Area;
 
 namespace Microservice.Permissions.Core.Validators.Area;
 

@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
-using Microservice.Permissions.Database.Extensions;
-using Microservice.Permissions.Database.Settings;
 using Microservice.Permissions.Kernel.Entities;
+using Microservice.Permissions.Persistence.EfCore.Extensions;
+using Microservice.Permissions.Persistence.EfCore.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Microservice.Permissions.Database;
+namespace Microservice.Permissions.Persistence.EfCore;
 
 public sealed class ApplicationDatabaseContext : DbContext
 {

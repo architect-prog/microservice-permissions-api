@@ -1,7 +1,7 @@
 ﻿using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Microservice.Permissions.Database.Extensions;
+namespace Microservice.Permissions.Persistence.EfCore.Extensions;
 
 public static class DataPopulationExtensions
 {

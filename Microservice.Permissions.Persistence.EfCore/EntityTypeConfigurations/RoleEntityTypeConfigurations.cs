@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Microservice.Permissions.Database.EntityTypeConfigurations;
+namespace Microservice.Permissions.Persistence.EfCore.EntityTypeConfigurations;
 
 public sealed class RoleEntityTypeConfigurations : IEntityTypeConfiguration<RoleEntity>
 {

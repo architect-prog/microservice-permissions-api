@@ -44,9 +44,9 @@ public sealed class PermissionsController : ControllerBase
     [ProducesNotFound]
     [ProducesNoContent]
     [HttpDelete]
-    public async Task<IActionResult> Delete(int areaId, [FromQuery] string[] permission)
+    public async Task<IActionResult> Delete(int areaId, [FromQuery] string[] permissions)
     {
-        var result = await permissionService.Delete(areaId, permission);
+        var result = await permissionService.Delete(areaId, permissions);
         var response = result.MatchActionResult(() => NoContent());
 
         return response;

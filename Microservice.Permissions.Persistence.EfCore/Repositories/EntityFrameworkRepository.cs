@@ -2,7 +2,7 @@
 using ArchitectProg.Kernel.Extensions.Specifications;
 using Microsoft.EntityFrameworkCore;
 
-namespace Microservice.Permissions.Database.Repositories;
+namespace Microservice.Permissions.Persistence.EfCore.Repositories;
 
 public sealed class EntityFrameworkRepository<T> : IRepository<T> where T : class
 {

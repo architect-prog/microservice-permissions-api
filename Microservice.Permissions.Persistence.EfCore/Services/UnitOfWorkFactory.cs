@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microservice.Permissions.Database.Services;
+namespace Microservice.Permissions.Persistence.EfCore.Services;
 
 public sealed class UnitOfWorkFactory : IUnitOfWorkFactory
 {

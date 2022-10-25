@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Database.Specifications.Role;
+namespace Microservice.Permissions.Persistence.EfCore.Specifications.Role;
 
 public sealed class RoleByNameSpecification : Specification<RoleEntity>
 {

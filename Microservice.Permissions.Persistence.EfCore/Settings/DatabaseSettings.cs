@@ -1,4 +1,4 @@
-﻿namespace Microservice.Permissions.Database.Settings;
+﻿namespace Microservice.Permissions.Persistence.EfCore.Settings;
 
 public sealed class DatabaseSettings
 {

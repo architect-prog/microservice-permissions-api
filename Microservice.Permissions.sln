@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Wiki\db.vuerd.json = Wiki\db.vuerd.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Persistence.Dapper", "Microservice.Permissions.Persistence.Dapper\Microservice.Permissions.Persistence.Dapper.csproj", "{28DA86E8-5B0E-4B19-8F5A-D0A2313015BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,5 +43,9 @@ Global
 		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B63F6428-6140-4710-BD08-E7DE5CE859DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28DA86E8-5B0E-4B19-8F5A-D0A2313015BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28DA86E8-5B0E-4B19-8F5A-D0A2313015BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28DA86E8-5B0E-4B19-8F5A-D0A2313015BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28DA86E8-5B0E-4B19-8F5A-D0A2313015BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

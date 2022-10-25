@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Database.Specifications.Area;
+namespace Microservice.Permissions.Persistence.EfCore.Specifications.Area;
 
 public sealed class ApplicationAreasSpecification : Specification<AreaEntity>
 {

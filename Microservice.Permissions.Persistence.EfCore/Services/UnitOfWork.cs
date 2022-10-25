@@ -3,7 +3,7 @@ using ArchitectProg.Kernel.Extensions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Microservice.Permissions.Database.Services;
+namespace Microservice.Permissions.Persistence.EfCore.Services;
 
 public sealed class UnitOfWork : IUnitOfWork
 {

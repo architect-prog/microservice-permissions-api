@@ -1,7 +1,7 @@
 ﻿using ArchitectProg.Kernel.Extensions.Abstractions;
 using Microservice.Permissions.Kernel.Entities;
 
-namespace Microservice.Permissions.Database.Specifications.Application;
+namespace Microservice.Permissions.Persistence.EfCore.Specifications.Application;
 
 public sealed class ApplicationByNameSpecification : Specification<ApplicationEntity>
 {
