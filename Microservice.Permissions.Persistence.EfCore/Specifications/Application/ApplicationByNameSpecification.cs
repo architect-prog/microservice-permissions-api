@@ -14,7 +14,7 @@ public sealed class ApplicationByNameSpecification : Specification<ApplicationEn
 
     public override IQueryable<ApplicationEntity> AddPredicates(IQueryable<ApplicationEntity> query)
     {
-        var result = query.Where(x => x.Name != null && x.Name.ToUpper() == name.ToUpper());
+        var result = query.Where(x => x.Name.ToUpper() == name.ToUpper());
         return result;
     }
 }

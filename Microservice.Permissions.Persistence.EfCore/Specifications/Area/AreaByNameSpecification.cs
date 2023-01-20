@@ -18,7 +18,7 @@ public sealed class AreaByNameSpecification : Specification<AreaEntity>
     {
         var result = query
             .Where(x => x.ApplicationId == applicationId)
-            .Where(x => x.Name != null && x.Name.ToUpper() == name.ToUpper());
+            .Where(x => x.Name.ToUpper() == name.ToUpper());
 
         return result;
     }

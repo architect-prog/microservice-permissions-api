@@ -21,7 +21,6 @@ using Microservice.Permissions.Core.Validators.Area;
 using Microservice.Permissions.Core.Validators.Common;
 using Microservice.Permissions.Core.Validators.Permission;
 using Microservice.Permissions.Core.Validators.Role;
-using Microservice.Permissions.Database;
 using Microservice.Permissions.Kernel.Interfaces;
 using Microservice.Permissions.Persistence.EfCore;
 using Microservice.Permissions.Persistence.EfCore.Repositories;
