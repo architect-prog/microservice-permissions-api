@@ -5,7 +5,7 @@ using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Services.Interfaces;
 
-namespace Microservice.Permissions.Core.Services;
+namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class AreaServiceValidationDecorator : IAreaService
 {

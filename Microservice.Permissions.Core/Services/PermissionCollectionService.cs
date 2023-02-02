@@ -80,6 +80,4 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
         var result = permissionCollections.Select(x => x.Id).ToArray();
         return result;
     }
-
-
 }

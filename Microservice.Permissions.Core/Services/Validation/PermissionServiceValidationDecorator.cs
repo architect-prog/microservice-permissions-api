@@ -5,7 +5,7 @@ using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Services.Interfaces;
 
-namespace Microservice.Permissions.Core.Services;
+namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class PermissionServiceValidationDecorator : IPermissionService
 {

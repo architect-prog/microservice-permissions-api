@@ -4,6 +4,9 @@ using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
 using Microservice.Permissions.Api.Extensions;
+using Microservice.Permissions.Caching.Services;
+using Microservice.Permissions.Caching.Services.Interfaces;
+using Microservice.Permissions.Caching.Settings;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
@@ -15,7 +18,9 @@ using Microservice.Permissions.Core.Factories.Interfaces;
 using Microservice.Permissions.Core.Mappers;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Core.Services;
+using Microservice.Permissions.Core.Services.Caching;
 using Microservice.Permissions.Core.Services.Interfaces;
+using Microservice.Permissions.Core.Services.Validation;
 using Microservice.Permissions.Core.Validators.Application;
 using Microservice.Permissions.Core.Validators.Area;
 using Microservice.Permissions.Core.Validators.Common;
@@ -82,6 +87,9 @@ builder.Services.Decorate<IAreaService, AreaServiceValidationDecorator>();
 builder.Services.Decorate<IApplicationService, ApplicationServiceValidationDecorator>();
 builder.Services.Decorate<IPermissionService, PermissionServiceValidationDecorator>();
 
+builder.Services.Decorate<IAreaService, AreaServiceCachingDecorator>();
+builder.Services.Decorate<IPermissionService, PermissionServiceCachingDecorator>();
+
 builder.Services.AddScoped<IValidator<int>, IdentifierValidator>();
 builder.Services.AddScoped<IValidator<int[]>, IdentifierArrayValidator>();
 builder.Services.AddScoped<IValidator<string[]>, PermissionNamesValidator>();
@@ -101,6 +109,9 @@ builder.Services.AddScoped<IDatabaseMigrationApplier, DatabaseMigrationApplier>(
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
+
+builder.Services.AddScoped<ICachingService, CachingService>();
+builder.Services.Configure<CachingSettings>(configuration.GetSection(nameof(CachingSettings)));
 
 var app = builder.Build();
 

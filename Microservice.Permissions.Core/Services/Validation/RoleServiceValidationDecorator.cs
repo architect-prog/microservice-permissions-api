@@ -5,7 +5,7 @@ using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Services.Interfaces;
 
-namespace Microservice.Permissions.Core.Services;
+namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class RoleServiceValidationDecorator : IRoleService
 {

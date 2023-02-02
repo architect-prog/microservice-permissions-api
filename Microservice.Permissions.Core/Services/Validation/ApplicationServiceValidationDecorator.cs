@@ -5,7 +5,7 @@ using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Responses.Application;
 using Microservice.Permissions.Core.Services.Interfaces;
 
-namespace Microservice.Permissions.Core.Services;
+namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class ApplicationServiceValidationDecorator : IApplicationService
 {
