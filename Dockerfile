@@ -9,6 +9,8 @@ COPY ["Microservice.Permissions.Api/Microservice.Permissions.Api.csproj", "Micro
 COPY ["Microservice.Permissions.Core/Microservice.Permissions.Core.csproj", "Microservice.Permissions.Core/"]
 COPY ["Microservice.Permissions.Kernel/Microservice.Permissions.Kernel.csproj", "Microservice.Permissions.Kernel/"]
 COPY ["Microservice.Permissions.Persistence.EfCore/Microservice.Permissions.Persistence.EfCore.csproj", "Microservice.Permissions.Persistence.EfCore/"]
+COPY ["Microservice.Permissions.Persistence.Dapper/Microservice.Permissions.Persistence.Dapper.csproj", "Microservice.Permissions.Persistence.Dapper/"]
+COPY ["Microservice.Permissions.Caching/Microservice.Permissions.Caching.csproj", "Microservice.Permissions.Caching/"]
 RUN dotnet restore "Microservice.Permissions.Api/Microservice.Permissions.Api.csproj"
 COPY . .
 WORKDIR "/src/Microservice.Permissions.Api"

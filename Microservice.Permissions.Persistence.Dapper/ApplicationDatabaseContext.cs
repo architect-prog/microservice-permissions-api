@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Microservice.Permissions.Persistence.Dapper;
 
-public class ApplicationDatabaseContext : IDisposable, IAsyncDisposable
+public sealed class ApplicationDatabaseContext : IDisposable, IAsyncDisposable
 {
     private readonly Lazy<NpgsqlConnection> connection;
     private readonly DatabaseSettings databaseSettings;
@@ -14,7 +14,7 @@ public class ApplicationDatabaseContext : IDisposable, IAsyncDisposable
     public ApplicationDatabaseContext(DatabaseSettings databaseSettings)
     {
         this.databaseSettings = databaseSettings;
-        connection = new Lazy<NpgsqlConnection>(() => GetConnection());
+        connection = new Lazy<NpgsqlConnection>(GetConnection, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     private NpgsqlConnection GetConnection()

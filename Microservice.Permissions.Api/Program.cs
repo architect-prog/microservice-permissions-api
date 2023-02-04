@@ -110,8 +110,9 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkReposito
 
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 
-builder.Services.AddScoped<ICachingService, CachingService>();
-builder.Services.Configure<CachingSettings>(configuration.GetSection(nameof(CachingSettings)));
+builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.AddScoped<ICacheStoreProvider, CacheStoreProvider>();
+builder.Services.Configure<CacheSettings>(configuration.GetSection(nameof(CacheSettings)));
 
 var app = builder.Build();
 

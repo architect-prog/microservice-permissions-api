@@ -10,14 +10,14 @@ namespace Microservice.Permissions.Core.Services.Caching;
 public sealed class AreaServiceCachingDecorator : IAreaService
 {
     private readonly IAreaService areaService;
-    private readonly ICachingService cachingService;
+    private readonly ICacheService cacheService;
 
     public AreaServiceCachingDecorator(
         IAreaService areaService,
-        ICachingService cachingService)
+        ICacheService cacheService)
     {
         this.areaService = areaService;
-        this.cachingService = cachingService;
+        this.cacheService = cacheService;
     }
 
     public Task<Result<AreaResponse>> Create(CreateAreaRequest request)
@@ -28,13 +28,13 @@ public sealed class AreaServiceCachingDecorator : IAreaService
     public async Task<Result<AreaResponse>> Get(int areaId)
     {
         var key = string.Format(CachingKeys.Area, areaId);
-        var cachedResult = await cachingService.GetValueOrDefault<AreaResponse>(key);
+        var cachedResult = await cacheService.GetValueOrDefault<AreaResponse>(key);
         if (cachedResult is not null)
             return cachedResult;
 
         var result = await areaService.Get(areaId);
         if (result.IsSuccess)
-            await cachingService.SetValue(key, result.ValueOrDefault, TimeSpan.FromSeconds(120));
+            await cacheService.SetValue(key, result.ValueOrDefault, TimeSpan.FromSeconds(120));
 
         return result;
     }
@@ -42,13 +42,13 @@ public sealed class AreaServiceCachingDecorator : IAreaService
     public async Task<Result<IEnumerable<AreaResponse>>> GetAll(int? applicationId, int? skip, int? take)
     {
         var key = string.Format(CachingKeys.Areas, applicationId);
-        var cachedResult = await cachingService.GetValueOrDefault<AreaResponse[]>(key);
+        var cachedResult = await cacheService.GetValueOrDefault<AreaResponse[]>(key);
         if (cachedResult is not null)
             return cachedResult;
 
         var result = await areaService.GetAll(applicationId, skip, take);
         if (result.IsSuccess)
-            await cachingService.SetValue(key, result.ValueOrDefault, TimeSpan.FromSeconds(120));
+            await cacheService.SetValue(key, result.ValueOrDefault, TimeSpan.FromSeconds(120));
 
         return result;
     }

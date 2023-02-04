@@ -4,7 +4,7 @@ using Microservice.Permissions.Core.Factories.Interfaces;
 
 namespace Microservice.Permissions.Core.Factories;
 
-public class DefaultPermissionFactory : IDefaultPermissionFactory
+public sealed class DefaultPermissionFactory : IDefaultPermissionFactory
 {
     public IEnumerable<PermissionResponse> CreateDefaultPermissions()
     {

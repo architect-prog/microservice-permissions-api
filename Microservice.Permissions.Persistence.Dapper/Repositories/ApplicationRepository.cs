@@ -4,7 +4,7 @@ using Microservice.Permissions.Kernel.Entities;
 
 namespace Microservice.Permissions.Persistence.Dapper.Repositories;
 
-public class ApplicationRepository : IRepository<ApplicationEntity>
+public sealed class ApplicationRepository : IRepository<ApplicationEntity>
 {
     private readonly ApplicationDatabaseContext context;
 
