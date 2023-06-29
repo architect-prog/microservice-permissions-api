@@ -17,6 +17,7 @@ services:
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https/
     depends_on:
+      - rabbitmq
       - postgres
       - redis
 
@@ -43,6 +44,7 @@ services:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+
   redis:
     image: redis:alpine
     restart: always
@@ -50,9 +52,19 @@ services:
       - 6379:6379
     command: redis-server --requirepass password
     volumes:
-      - redis:/data
+      - redis:/var/lib/redis/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data
+      - ~/.docker-conf/rabbitmq/log/:/var/lib/rabbitmq/log
 
 volumes:
+  rabbitmq:
   postgres:
   pgadmin:
   redis:

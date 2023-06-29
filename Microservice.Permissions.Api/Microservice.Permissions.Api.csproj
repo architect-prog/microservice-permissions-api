@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Microservice.Permissions.Core\Microservice.Permissions.Core.csproj" />
+        <ProjectReference Include="..\Microservice.Permissions.Messaging\Microservice.Permissions.Messaging.csproj" />
     </ItemGroup>
 
     <ItemGroup>

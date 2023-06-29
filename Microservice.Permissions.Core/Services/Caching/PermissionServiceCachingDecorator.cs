@@ -1,6 +1,5 @@
 ﻿using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Utils;
-using Microservice.Permissions.Caching.Services.Interfaces;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;

@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Microservice.Permissions.Caching\Microservice.Permissions.Caching.csproj" />
       <ProjectReference Include="..\Microservice.Permissions.Kernel\Microservice.Permissions.Kernel.csproj" />
       <ProjectReference Include="..\Microservice.Permissions.Persistence.Dapper\Microservice.Permissions.Persistence.Dapper.csproj" />
       <ProjectReference Include="..\Microservice.Permissions.Persistence.EfCore\Microservice.Permissions.Persistence.EfCore.csproj" />

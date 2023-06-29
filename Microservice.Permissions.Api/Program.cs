@@ -1,14 +1,14 @@
+using ArchitectProg.Caching.Redis;
+using ArchitectProg.Caching.Redis.Settings;
+using ArchitectProg.FunctionalExtensions;
+using ArchitectProg.Kernel.Extensions;
 using ArchitectProg.Kernel.Extensions.Exceptions;
-using ArchitectProg.Kernel.Extensions.Factories;
-using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
-using ArchitectProg.Kernel.Extensions.Interfaces;
+using ArchitectProg.Persistence.EfCore.PostgreSQL;
+using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
 using Microservice.Permissions.Api.Extensions;
-using Microservice.Permissions.Caching.Services;
-using Microservice.Permissions.Caching.Services.Interfaces;
-using Microservice.Permissions.Caching.Settings;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
@@ -28,11 +28,7 @@ using Microservice.Permissions.Core.Validators.Area;
 using Microservice.Permissions.Core.Validators.Common;
 using Microservice.Permissions.Core.Validators.Permission;
 using Microservice.Permissions.Core.Validators.Role;
-using Microservice.Permissions.Kernel.Interfaces;
 using Microservice.Permissions.Persistence.EfCore;
-using Microservice.Permissions.Persistence.EfCore.Repositories;
-using Microservice.Permissions.Persistence.EfCore.Services;
-using Microservice.Permissions.Persistence.EfCore.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ValidationException = ArchitectProg.Kernel.Extensions.Exceptions.ValidationException;
@@ -104,18 +100,12 @@ builder.Services.AddScoped<IValidator<CreateAreaRequest>, CreateAreaRequestValid
 builder.Services.AddScoped<IValidator<(int, UpdateAreaRequest)>, UpdateAreaRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdatePermissionsRequest>, UpdatePermissionsRequestValidator>();
 
-builder.Services.AddDbContext<ApplicationDatabaseContext>();
-builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
-builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
-builder.Services.AddScoped<IDatabaseMigrationApplier, DatabaseMigrationApplier>();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
+builder.Services.AddRedisCache();
+builder.Services.AddKernelExtensions();
+builder.Services.AddFunctionalExtensions();
+builder.Services.AddEfCoreRepository();
+builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
-
-builder.Services.AddScoped<IResultFactory, ResultFactory>();
-builder.Services.AddScoped<ISpecificationFactory, SpecificationFactory>();
-
-builder.Services.AddScoped<ICacheService, CacheService>();
-builder.Services.AddScoped<ICacheStoreProvider, CacheStoreProvider>();
 builder.Services.Configure<CacheSettings>(configuration.GetSection(nameof(CacheSettings)));
 
 var app = builder.Build();

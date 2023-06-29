@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using ArchitectProg.Persistence.EfCore.PostgreSQL.Settings;
 using Microservice.Permissions.Kernel.Entities;
 using Microservice.Permissions.Persistence.EfCore.Extensions;
-using Microservice.Permissions.Persistence.EfCore.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

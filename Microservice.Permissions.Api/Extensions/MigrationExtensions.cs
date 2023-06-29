@@ -1,4 +1,4 @@
-﻿using Microservice.Permissions.Kernel.Interfaces;
+﻿using ArchitectProg.Persistence.EfCore.PostgreSQL.Services.Interfaces;
 
 namespace Microservice.Permissions.Api.Extensions;
 
