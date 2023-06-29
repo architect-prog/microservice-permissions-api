@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Abstractions;
+﻿using ArchitectProg.Kernel.Extensions.Specifications;
 using Microservice.Permissions.Kernel.Entities;
 using Microsoft.EntityFrameworkCore;
 

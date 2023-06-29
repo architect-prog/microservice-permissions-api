@@ -1,4 +1,5 @@
 ﻿using ArchitectProg.Kernel.Extensions.Interfaces;
+using ArchitectProg.Kernel.Extensions.Specifications.Interfaces;
 using Dapper;
 using Microservice.Permissions.Kernel.Entities;
 

@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
  
     <ItemGroup>
-      <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="1.2.5" />
-      <PackageReference Include="ArchitectProg.Kernel.Extensions" Version="1.0.12" />
+      <PackageReference Include="ArchitectProg.FunctionalExtensions" Version="2.2.6" />
+      <PackageReference Include="ArchitectProg.Kernel.Extensions" Version="2.0.2" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
+using ArchitectProg.Kernel.Extensions.Utils;
 using FluentValidation;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
@@ -9,6 +10,7 @@ namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class ApplicationServiceValidationDecorator : IApplicationService
 {
+    private readonly IResultFactory resultFactory;
     private readonly IApplicationService applicationService;
     private readonly IValidator<int> identifierValidator;
     private readonly IValidator<(int?, int?)> skipTakeValidator;
@@ -16,12 +18,14 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
     private readonly IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator;
 
     public ApplicationServiceValidationDecorator(
+        IResultFactory resultFactory,
         IApplicationService applicationService,
         IValidator<int> identifierValidator,
         IValidator<(int?, int?)> skipTakeValidator,
         IValidator<CreateApplicationRequest> createApplicationRequestValidator,
         IValidator<(int, UpdateApplicationRequest)> updateApplicationRequestValidator)
     {
+        this.resultFactory = resultFactory;
         this.applicationService = applicationService;
         this.identifierValidator = identifierValidator;
         this.skipTakeValidator = skipTakeValidator;
@@ -34,7 +38,7 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
         var validationResult = await createApplicationRequestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure<ApplicationResponse>(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure<ApplicationResponse>(validationResult.ToString());
             return failureResult;
         }
 
@@ -46,7 +50,7 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
         var validationResult = identifierValidator.Validate(applicationId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<ApplicationResponse>(validationResult.ToString());
             return Task.FromResult(failureResult);
         }
@@ -59,7 +63,7 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
         var validationResult = skipTakeValidator.Validate((skip, take));
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<IEnumerable<ApplicationResponse>>(validationResult.ToString());
             return Task.FromResult(failureResult);
         }
@@ -74,7 +78,7 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
 
         if (!requestValidationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure(requestValidationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure(requestValidationResult.ToString());
             return failureResult;
         }
 
@@ -87,7 +91,7 @@ public sealed class ApplicationServiceValidationDecorator : IApplicationService
         var validationResult = identifierValidator.Validate(applicationId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Application);
+            var failureResult = resultFactory.ResourceNotFoundFailure(Names.Application);
             return Task.FromResult(failureResult);
         }
 

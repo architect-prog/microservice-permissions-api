@@ -1,4 +1,6 @@
 using ArchitectProg.Kernel.Extensions.Exceptions;
+using ArchitectProg.Kernel.Extensions.Factories;
+using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
@@ -107,8 +109,10 @@ builder.Services.AddScoped<DbContext, ApplicationDatabaseContext>();
 builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 builder.Services.AddScoped<IDatabaseMigrationApplier, DatabaseMigrationApplier>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
-
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
+
+builder.Services.AddScoped<IResultFactory, ResultFactory>();
+builder.Services.AddScoped<ISpecificationFactory, SpecificationFactory>();
 
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<ICacheStoreProvider, CacheStoreProvider>();
@@ -132,6 +136,6 @@ app.UseCors(policy =>
 });
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
+
 app.Run();

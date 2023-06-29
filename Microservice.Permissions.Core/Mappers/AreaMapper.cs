@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Abstractions;
+﻿using ArchitectProg.Kernel.Extensions.Mappers;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
 using Microservice.Permissions.Core.Mappers.Interfaces;
 using Microservice.Permissions.Kernel.Entities;

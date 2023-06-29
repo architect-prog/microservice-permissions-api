@@ -1,5 +1,5 @@
 ﻿using ArchitectProg.FunctionalExtensions.Extensions;
-using ArchitectProg.Kernel.Extensions.Abstractions;
+using ArchitectProg.Kernel.Extensions.Mappers;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Mappers.Interfaces;

@@ -1,5 +1,6 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
+using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
 using Microservice.Permissions.Core.Contracts.Responses.Permission;
 using Microservice.Permissions.Core.Creators.Interfaces;
@@ -13,6 +14,7 @@ namespace Microservice.Permissions.Core.Services;
 
 public sealed class PermissionService : IPermissionService
 {
+    private readonly IResultFactory resultFactory;
     private readonly IPermissionCreator permissionCreator;
     private readonly IPermissionCollectionMapper permissionCollectionMapper;
     private readonly IPermissionCollectionDetailsMapper permissionCollectionDetailsMapper;
@@ -21,6 +23,7 @@ public sealed class PermissionService : IPermissionService
     private readonly IRepository<PermissionEntity> permissionRepository;
 
     public PermissionService(
+        IResultFactory resultFactory,
         IPermissionCreator permissionCreator,
         IPermissionCollectionMapper permissionCollectionMapper,
         IPermissionCollectionDetailsMapper permissionCollectionDetailsMapper,
@@ -28,6 +31,7 @@ public sealed class PermissionService : IPermissionService
         IRepository<PermissionCollectionEntity> repository,
         IRepository<PermissionEntity> permissionRepository)
     {
+        this.resultFactory = resultFactory;
         this.permissionCreator = permissionCreator;
         this.permissionCollectionMapper = permissionCollectionMapper;
         this.permissionCollectionDetailsMapper = permissionCollectionDetailsMapper;
@@ -42,7 +46,7 @@ public sealed class PermissionService : IPermissionService
         var permissionCollection = await repository.GetOrDefault(specification);
         if (permissionCollection is null)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<PermissionCollectionDetailsResponse>(nameof(permissionCollection));
             return failureResult;
         }
@@ -70,7 +74,7 @@ public sealed class PermissionService : IPermissionService
 
         if (!rolePermissionCollections.Any())
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(rolePermissionCollections));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(rolePermissionCollections));
             return failureResult;
         }
 
@@ -115,7 +119,7 @@ public sealed class PermissionService : IPermissionService
             await transaction.Commit();
         }
 
-        return ResultFactory.Success();
+        return resultFactory.Success();
     }
 
     public async Task<Result> Delete(int areaId, string[] permissions)
@@ -129,7 +133,7 @@ public sealed class PermissionService : IPermissionService
 
         if (!deletedPermissions.Any())
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(permissions));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(permissions));
             return failureResult;
         }
 
@@ -139,6 +143,6 @@ public sealed class PermissionService : IPermissionService
             await transaction.Commit();
         }
 
-        return ResultFactory.Success();
+        return resultFactory.Success();
     }
 }

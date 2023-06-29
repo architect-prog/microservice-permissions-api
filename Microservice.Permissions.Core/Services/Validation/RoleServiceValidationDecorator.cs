@@ -1,4 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
+using ArchitectProg.Kernel.Extensions.Utils;
 using FluentValidation;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
@@ -9,6 +10,7 @@ namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class RoleServiceValidationDecorator : IRoleService
 {
+    private readonly IResultFactory resultFactory;
     private readonly IRoleService roleService;
     private readonly IValidator<int> identifierValidator;
     private readonly IValidator<(int?, int?)> skipTakeValidator;
@@ -16,12 +18,14 @@ public sealed class RoleServiceValidationDecorator : IRoleService
     private readonly IValidator<(int, UpdateRoleRequest)> updateRoleRequestValidator;
 
     public RoleServiceValidationDecorator(
+        IResultFactory resultFactory,
         IRoleService roleService,
         IValidator<int> identifierValidator,
         IValidator<(int?, int?)> skipTakeValidator,
         IValidator<CreateRoleRequest> createRoleRequestValidator,
         IValidator<(int, UpdateRoleRequest)> updateRoleRequestValidator)
     {
+        this.resultFactory = resultFactory;
         this.roleService = roleService;
         this.identifierValidator = identifierValidator;
         this.skipTakeValidator = skipTakeValidator;
@@ -34,7 +38,7 @@ public sealed class RoleServiceValidationDecorator : IRoleService
         var validationResult = await createRoleRequestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure<RoleResponse>(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure<RoleResponse>(validationResult.ToString());
             return failureResult;
         }
 
@@ -47,7 +51,7 @@ public sealed class RoleServiceValidationDecorator : IRoleService
         var validationResult = identifierValidator.Validate(roleId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<RoleResponse>(Names.Role);
+            var failureResult = resultFactory.ResourceNotFoundFailure<RoleResponse>(Names.Role);
             return Task.FromResult(failureResult);
         }
 
@@ -59,7 +63,7 @@ public sealed class RoleServiceValidationDecorator : IRoleService
         var validationResult = skipTakeValidator.Validate((skip, take));
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<IEnumerable<RoleResponse>>(Names.Role);
+            var failureResult = resultFactory.ResourceNotFoundFailure<IEnumerable<RoleResponse>>(Names.Role);
             return Task.FromResult(failureResult);
         }
 
@@ -71,7 +75,7 @@ public sealed class RoleServiceValidationDecorator : IRoleService
         var validationResult = await updateRoleRequestValidator.ValidateAsync((roleId, request));
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure(validationResult.ToString());
             return failureResult;
         }
 
@@ -84,7 +88,7 @@ public sealed class RoleServiceValidationDecorator : IRoleService
         var validationResult = identifierValidator.Validate(roleId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Role);
+            var failureResult = resultFactory.ResourceNotFoundFailure(Names.Role);
             return Task.FromResult(failureResult);
         }
 

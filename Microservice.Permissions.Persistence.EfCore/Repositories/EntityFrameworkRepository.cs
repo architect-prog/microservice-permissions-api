@@ -1,5 +1,6 @@
 ﻿using ArchitectProg.Kernel.Extensions.Interfaces;
 using ArchitectProg.Kernel.Extensions.Specifications;
+using ArchitectProg.Kernel.Extensions.Specifications.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Microservice.Permissions.Persistence.EfCore.Repositories;

@@ -1,4 +1,5 @@
-﻿using Microservice.Permissions.Caching.Services.Interfaces;
+﻿using ArchitectProg.Kernel.Extensions.Interfaces;
+using Microservice.Permissions.Caching.Services.Interfaces;
 using Newtonsoft.Json;
 
 namespace Microservice.Permissions.Caching.Services;

@@ -1,6 +1,6 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
-using ArchitectProg.Kernel.Extensions.Specifications;
+using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Responses.Application;
 using Microservice.Permissions.Core.Creators.Interfaces;
@@ -12,17 +12,23 @@ namespace Microservice.Permissions.Core.Services;
 
 public sealed class ApplicationService : IApplicationService
 {
+    private readonly IResultFactory resultFactory;
+    private readonly ISpecificationFactory specificationFactory;
     private readonly IApplicationCreator applicationCreator;
     private readonly IApplicationMapper applicationMapper;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<ApplicationEntity> repository;
 
     public ApplicationService(
+        IResultFactory resultFactory,
+        ISpecificationFactory specificationFactory,
         IApplicationCreator applicationCreator,
         IApplicationMapper applicationMapper,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<ApplicationEntity> repository)
     {
+        this.resultFactory = resultFactory;
+        this.specificationFactory = specificationFactory;
         this.applicationCreator = applicationCreator;
         this.applicationMapper = applicationMapper;
         this.unitOfWorkFactory = unitOfWorkFactory;
@@ -47,7 +53,7 @@ public sealed class ApplicationService : IApplicationService
         var application = await repository.GetOrDefault(applicationId);
         if (application is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<ApplicationResponse>(nameof(application));
+            var failureResult = resultFactory.ResourceNotFoundFailure<ApplicationResponse>(nameof(application));
             return failureResult;
         }
 
@@ -58,7 +64,7 @@ public sealed class ApplicationService : IApplicationService
     public async Task<Result<IEnumerable<ApplicationResponse>>> GetAll(int? skip, int? take)
     {
         var applications = await repository
-            .List(SpecificationFactory.AllSpecification<ApplicationEntity>(), skip, take);
+            .List(specificationFactory.AllSpecification<ApplicationEntity>(), skip, take);
 
         var result = applicationMapper.MapCollection(applications).ToArray();
         return result;
@@ -69,7 +75,7 @@ public sealed class ApplicationService : IApplicationService
         var application = await repository.GetOrDefault(applicationId);
         if (application is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(application));
             return failureResult;
         }
 
@@ -81,7 +87,7 @@ public sealed class ApplicationService : IApplicationService
             await transaction.Commit();
         }
 
-        return ResultFactory.Success();
+        return resultFactory.Success();
     }
 
     public async Task<Result> Delete(int applicationId)
@@ -89,17 +95,22 @@ public sealed class ApplicationService : IApplicationService
         var application = await repository.GetOrDefault(applicationId);
         if (application is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(application));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(application));
             return failureResult;
         }
 
-        await repository.Delete(application);
-        return ResultFactory.Success();
+        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        {
+            await repository.Delete(application);
+            await transaction.Commit();
+        }
+
+        return resultFactory.Success();
     }
 
     public Task<int> Count()
     {
-        var result = repository.Count(SpecificationFactory.AllSpecification<ApplicationEntity>());
+        var result = repository.Count(specificationFactory.AllSpecification<ApplicationEntity>());
         return result;
     }
 }

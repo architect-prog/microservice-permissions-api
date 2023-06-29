@@ -1,4 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
+using ArchitectProg.Kernel.Extensions.Utils;
 using FluentValidation;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
@@ -9,6 +10,7 @@ namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class PermissionServiceValidationDecorator : IPermissionService
 {
+    private readonly IResultFactory resultFactory;
     private readonly IPermissionService permissionService;
     private readonly IValidator<int> identifierValidator;
     private readonly IValidator<int[]> identifierArrayValidator;
@@ -16,12 +18,14 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
     private readonly IValidator<UpdatePermissionsRequest> updatePermissionsRequestValidator;
 
     public PermissionServiceValidationDecorator(
+        IResultFactory resultFactory,
         IPermissionService permissionService,
         IValidator<int> identifierValidator,
         IValidator<int[]> identifierArrayValidator,
         IValidator<string[]> permissionNamesValidator,
         IValidator<UpdatePermissionsRequest> updatePermissionsRequestValidator)
     {
+        this.resultFactory = resultFactory;
         this.permissionService = permissionService;
         this.identifierValidator = identifierValidator;
         this.identifierArrayValidator = identifierArrayValidator;
@@ -35,7 +39,7 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
             || string.IsNullOrWhiteSpace(area)
             || string.IsNullOrWhiteSpace(role))
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<PermissionCollectionDetailsResponse>(Names.Permission);
             return Task.FromResult(failureResult);
         }
@@ -48,7 +52,7 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
         var areasValidationResult = identifierArrayValidator.Validate(areaIds ?? Array.Empty<int>());
         if (!areasValidationResult.IsValid)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<IEnumerable<PermissionCollectionResponse>>(Names.Permission);
             return Task.FromResult(failureResult);
         }
@@ -56,7 +60,7 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
         var rolesValidationResult = identifierArrayValidator.Validate(roleIds ?? Array.Empty<int>());
         if (!rolesValidationResult.IsValid)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<IEnumerable<PermissionCollectionResponse>>(Names.Permission);
             return Task.FromResult(failureResult);
         }
@@ -69,7 +73,7 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
         var validationResult = await updatePermissionsRequestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure(validationResult.ToString());
             return failureResult;
         }
 
@@ -82,14 +86,14 @@ public sealed class PermissionServiceValidationDecorator : IPermissionService
         var permissionsValidationResult = permissionNamesValidator.Validate(permissions);
         if (!permissionsValidationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Permission);
+            var failureResult = resultFactory.ResourceNotFoundFailure(Names.Permission);
             return Task.FromResult(failureResult);
         }
 
         var areaValidationResult = identifierValidator.Validate(areaId);
         if (!areaValidationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Permission);
+            var failureResult = resultFactory.ResourceNotFoundFailure(Names.Permission);
             return Task.FromResult(failureResult);
         }
 

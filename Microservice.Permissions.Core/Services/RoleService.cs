@@ -1,6 +1,6 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
-using ArchitectProg.Kernel.Extensions.Specifications;
+using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Creators.Interfaces;
@@ -12,6 +12,8 @@ namespace Microservice.Permissions.Core.Services;
 
 public sealed class RoleService : IRoleService
 {
+    private readonly IResultFactory resultFactory;
+    private readonly ISpecificationFactory specificationFactory;
     private readonly IRoleCreator roleCreator;
     private readonly IRoleMapper roleMapper;
     private readonly IPermissionCollectionService permissionCollectionService;
@@ -19,12 +21,16 @@ public sealed class RoleService : IRoleService
     private readonly IRepository<RoleEntity> repository;
 
     public RoleService(
+        IResultFactory resultFactory,
+        ISpecificationFactory specificationFactory,
         IRoleCreator roleCreator,
         IRoleMapper roleMapper,
         IPermissionCollectionService permissionCollectionService,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<RoleEntity> repository)
     {
+        this.resultFactory = resultFactory;
+        this.specificationFactory = specificationFactory;
         this.roleCreator = roleCreator;
         this.roleMapper = roleMapper;
         this.permissionCollectionService = permissionCollectionService;
@@ -51,7 +57,7 @@ public sealed class RoleService : IRoleService
         var role = await repository.GetOrDefault(roleId);
         if (role is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<RoleResponse>(nameof(role));
+            var failureResult = resultFactory.ResourceNotFoundFailure<RoleResponse>(nameof(role));
             return failureResult;
         }
 
@@ -62,7 +68,7 @@ public sealed class RoleService : IRoleService
     public async Task<Result<IEnumerable<RoleResponse>>> GetAll(int? skip = null, int? take = null)
     {
         var roles = await repository
-            .List(SpecificationFactory.AllSpecification<RoleEntity>(), skip, take);
+            .List(specificationFactory.AllSpecification<RoleEntity>(), skip, take);
 
         var result = roleMapper.MapCollection(roles).ToArray();
         return result;
@@ -73,7 +79,7 @@ public sealed class RoleService : IRoleService
         var role = await repository.GetOrDefault(roleId);
         if (role is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(role));
             return failureResult;
         }
 
@@ -84,7 +90,7 @@ public sealed class RoleService : IRoleService
             await transaction.Commit();
         }
 
-        return ResultFactory.Success();
+        return resultFactory.Success();
     }
 
     public async Task<Result> Delete(int roleId)
@@ -92,17 +98,22 @@ public sealed class RoleService : IRoleService
         var role = await repository.GetOrDefault(roleId);
         if (role is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(nameof(role));
+            var failureResult = resultFactory.ResourceNotFoundFailure(nameof(role));
             return failureResult;
         }
 
-        await repository.Delete(role);
-        return ResultFactory.Success();
+        using (var transaction = unitOfWorkFactory.BeginTransaction())
+        {
+            await repository.Delete(role);
+            await transaction.Commit();
+        }
+
+        return resultFactory.Success();
     }
 
     public Task<int> Count()
     {
-        var result = repository.Count(SpecificationFactory.AllSpecification<RoleEntity>());
+        var result = repository.Count(specificationFactory.AllSpecification<RoleEntity>());
         return result;
     }
 }

@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Responses.Area;
 

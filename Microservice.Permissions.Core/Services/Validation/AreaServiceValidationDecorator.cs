@@ -1,4 +1,5 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
+using ArchitectProg.Kernel.Extensions.Utils;
 using FluentValidation;
 using Microservice.Permissions.Core.Constants;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
@@ -9,6 +10,7 @@ namespace Microservice.Permissions.Core.Services.Validation;
 
 public sealed class AreaServiceValidationDecorator : IAreaService
 {
+    private readonly IResultFactory resultFactory;
     private readonly IAreaService areaService;
     private readonly IValidator<int> identifierValidator;
     private readonly IValidator<(int?, int?)> skipTakeValidator;
@@ -16,12 +18,14 @@ public sealed class AreaServiceValidationDecorator : IAreaService
     private readonly IValidator<(int, UpdateAreaRequest)> updateAreaRequestValidator;
 
     public AreaServiceValidationDecorator(
+        IResultFactory resultFactory,
         IAreaService areaService,
         IValidator<int> identifierValidator,
         IValidator<(int?, int?)> skipTakeValidator,
         IValidator<CreateAreaRequest> createAreaRequestValidator,
         IValidator<(int, UpdateAreaRequest)> updateAreaRequestValidator)
     {
+        this.resultFactory = resultFactory;
         this.areaService = areaService;
         this.identifierValidator = identifierValidator;
         this.skipTakeValidator = skipTakeValidator;
@@ -34,7 +38,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         var validationResult = await createAreaRequestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure<AreaResponse>(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure<AreaResponse>(validationResult.ToString());
             return failureResult;
         }
 
@@ -46,7 +50,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         var validationResult = identifierValidator.Validate(areaId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<AreaResponse>(Names.Area);
+            var failureResult = resultFactory.ResourceNotFoundFailure<AreaResponse>(Names.Area);
             return Task.FromResult(failureResult);
         }
 
@@ -60,7 +64,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
             var identifierValidationResult = identifierValidator.Validate(applicationId.Value);
             if (!identifierValidationResult.IsValid)
             {
-                var failureResult = ResultFactory
+                var failureResult = resultFactory
                     .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(Names.Area);
                 return Task.FromResult(failureResult);
             }
@@ -69,7 +73,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         var validationResult = skipTakeValidator.Validate((skip, take));
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory
+            var failureResult = resultFactory
                 .ResourceNotFoundFailure<IEnumerable<AreaResponse>>(Names.Area);
             return Task.FromResult(failureResult);
         }
@@ -82,7 +86,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         var validationResult = await updateAreaRequestValidator.ValidateAsync((areaId, request));
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ValidationFailure(validationResult.ToString());
+            var failureResult = resultFactory.ValidationFailure(validationResult.ToString());
             return failureResult;
         }
 
@@ -95,7 +99,7 @@ public sealed class AreaServiceValidationDecorator : IAreaService
         var validationResult = identifierValidator.Validate(areaId);
         if (!validationResult.IsValid)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure(Names.Area);
+            var failureResult = resultFactory.ResourceNotFoundFailure(Names.Area);
             return Task.FromResult(failureResult);
         }
 

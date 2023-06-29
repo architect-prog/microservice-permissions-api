@@ -1,6 +1,6 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Factories.Interfaces;
 using ArchitectProg.Kernel.Extensions.Interfaces;
-using ArchitectProg.Kernel.Extensions.Specifications;
+using ArchitectProg.Kernel.Extensions.Utils;
 using Microservice.Permissions.Core.Creators.Interfaces;
 using Microservice.Permissions.Core.Services.Interfaces;
 using Microservice.Permissions.Kernel.Entities;
@@ -9,6 +9,8 @@ namespace Microservice.Permissions.Core.Services;
 
 public sealed class PermissionCollectionService : IPermissionCollectionService
 {
+    private readonly IResultFactory resultFactory;
+    private readonly ISpecificationFactory specificationFactory;
     private readonly IPermissionCollectionCreator permissionCollectionCreator;
     private readonly IUnitOfWorkFactory unitOfWorkFactory;
     private readonly IRepository<PermissionCollectionEntity> repository;
@@ -16,12 +18,16 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
     private readonly IRepository<RoleEntity> roleRepository;
 
     public PermissionCollectionService(
+        IResultFactory resultFactory,
+        ISpecificationFactory specificationFactory,
         IPermissionCollectionCreator permissionCollectionCreator,
         IUnitOfWorkFactory unitOfWorkFactory,
         IRepository<PermissionCollectionEntity> repository,
         IRepository<AreaEntity> areaRepository,
         IRepository<RoleEntity> roleRepository)
     {
+        this.resultFactory = resultFactory;
+        this.specificationFactory = specificationFactory;
         this.permissionCollectionCreator = permissionCollectionCreator;
         this.unitOfWorkFactory = unitOfWorkFactory;
         this.repository = repository;
@@ -32,11 +38,11 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
     public async Task<Result<IEnumerable<int>>> CreateForRole(int roleId)
     {
         var role = await roleRepository.GetOrDefault(roleId);
-        var areas = await areaRepository.List(SpecificationFactory.AllSpecification<AreaEntity>());
+        var areas = await areaRepository.List(specificationFactory.AllSpecification<AreaEntity>());
 
         if (role is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(role));
+            var failureResult = resultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(role));
             return failureResult;
         }
 
@@ -58,11 +64,11 @@ public sealed class PermissionCollectionService : IPermissionCollectionService
     public async Task<Result<IEnumerable<int>>> CreateForArea(int areaId)
     {
         var area = await areaRepository.GetOrDefault(areaId);
-        var roles = await roleRepository.List(SpecificationFactory.AllSpecification<RoleEntity>());
+        var roles = await roleRepository.List(specificationFactory.AllSpecification<RoleEntity>());
 
         if (area is null)
         {
-            var failureResult = ResultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(area));
+            var failureResult = resultFactory.ResourceNotFoundFailure<IEnumerable<int>>(nameof(area));
             return failureResult;
         }
 

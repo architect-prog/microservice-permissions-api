@@ -1,4 +1,4 @@
-﻿using ArchitectProg.Kernel.Extensions.Common;
+﻿using ArchitectProg.Kernel.Extensions.Utils;
 
 namespace Microservice.Permissions.Core.Services.Interfaces;
 
