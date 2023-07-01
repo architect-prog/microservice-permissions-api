@@ -1,36 +1,38 @@
-﻿using Microservice.Permissions.Core.Contracts.Requests.Role;
+﻿using Azure.Messaging.ServiceBus;
+using Microservice.Permissions.Azure.Bus.Extensions;
+using Microservice.Permissions.Azure.Bus.Handlers.Interfaces;
+using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Services.Interfaces;
-using Microservice.Permissions.Messaging.Extensions;
-using Microservice.Permissions.Messaging.Handlers.Interfaces;
 using Microsoft.Extensions.Logging;
-using RabbitMQ.Client.Events;
 
-namespace Microservice.Permissions.Messaging.Handlers;
+namespace Microservice.Permissions.Azure.Bus.Handlers;
 
-public sealed class CreateRoleMessageHandler : IMessageHandler
+public sealed class CreateRoleAzureMessageHandler : IMessageHandler
 {
     private readonly IRoleService roleService;
-    private readonly ILogger<CreateRoleMessageHandler> logger;
+    private readonly ILogger<CreateRoleAzureMessageHandler> logger;
 
-    public CreateRoleMessageHandler(
+    public CreateRoleAzureMessageHandler(
         IRoleService roleService,
-        ILogger<CreateRoleMessageHandler> logger)
+        ILogger<CreateRoleAzureMessageHandler> logger)
     {
         this.roleService = roleService;
         this.logger = logger;
     }
 
-    public async Task Handle(BasicDeliverEventArgs args)
+    public async Task Handle(ProcessMessageEventArgs args)
     {
         if (args == null)
             throw new ArgumentNullException(nameof(args));
 
         logger.Log(LogLevel.Information, "CreateRoleMessageHandler handling started");
 
-        var message = args.Body.FromBytes().Deserialize<CreateRoleRequest>();
+        var body = args.Message.Body.ToString();
+        var message = body.Deserialize<CreateRoleRequest>();
+
         if (message is null)
             throw new InvalidCastException("Message body must be non-empty and have consistent type");
-        
+
         var result = await roleService.Create(message);
 
         if (!result.IsSuccess)
@@ -43,5 +45,14 @@ public sealed class CreateRoleMessageHandler : IMessageHandler
         }
 
         logger.Log(LogLevel.Information, "CreateRoleMessageHandler handling finished. Status: success");
+    }
+
+    public Task HandleError(ProcessErrorEventArgs args)
+    {
+        if (args == null)
+            throw new ArgumentNullException(nameof(args));
+
+        logger.Log(LogLevel.Error, args.Exception?.Message);
+        return Task.CompletedTask;
     }
 }

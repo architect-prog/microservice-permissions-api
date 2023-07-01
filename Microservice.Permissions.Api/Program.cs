@@ -9,6 +9,9 @@ using ArchitectProg.WebApi.Extensions.Filters;
 using ArchitectProg.WebApi.Extensions.Responses;
 using FluentValidation;
 using Microservice.Permissions.Api.Extensions;
+using Microservice.Permissions.Azure.Bus.Extensions;
+using Microservice.Permissions.Azure.Bus.Handlers;
+using Microservice.Permissions.Azure.Bus.Settings;
 using Microservice.Permissions.Core.Contracts.Requests.Application;
 using Microservice.Permissions.Core.Contracts.Requests.Area;
 using Microservice.Permissions.Core.Contracts.Requests.Permission;
@@ -28,6 +31,9 @@ using Microservice.Permissions.Core.Validators.Area;
 using Microservice.Permissions.Core.Validators.Common;
 using Microservice.Permissions.Core.Validators.Permission;
 using Microservice.Permissions.Core.Validators.Role;
+using Microservice.Permissions.Messaging.Extensions;
+using Microservice.Permissions.Messaging.Handlers;
+using Microservice.Permissions.Messaging.Settings;
 using Microservice.Permissions.Persistence.EfCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -100,6 +106,31 @@ builder.Services.AddScoped<IValidator<CreateAreaRequest>, CreateAreaRequestValid
 builder.Services.AddScoped<IValidator<(int, UpdateAreaRequest)>, UpdateAreaRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdatePermissionsRequest>, UpdatePermissionsRequestValidator>();
 
+builder.Services.AddMessageHandler<CreateRoleMessageHandler>();
+builder.Services.AddMessageHandler<SendEmailMessageHandler>();
+builder.Services.AddMessageBus(messageBusBuilder =>
+{
+    messageBusBuilder
+        .RegisterExchange("identity")
+        .RegisterHandler<CreateRoleMessageHandler>("create.role")
+        .RegisterHandler<CreateRoleMessageHandler>("update.role")
+        .RegisterExchange("email")
+        .RegisterHandler<SendEmailMessageHandler>("send.email");
+});
+builder.Services.Configure<MessagingSettings>(configuration.GetSection(nameof(MessagingSettings)));
+
+builder.Services.AddAzureMessageHandler<CreateRoleAzureMessageHandler>();
+builder.Services.AddAzureMessageHandler<SendEmailAzureMessageHandler>();
+builder.Services.AddAzureMessageBus(messageBusBuilder =>
+{
+    messageBusBuilder
+        .RegisterHandler<CreateRoleAzureMessageHandler>("create.role")
+        .RegisterHandler<CreateRoleAzureMessageHandler>("update.role")
+        .RegisterHandler<SendEmailAzureMessageHandler>("send.email");
+});
+builder.Services.Configure<ServiceBusSettings>(configuration.GetSection(nameof(ServiceBusSettings)));
+
+
 builder.Services.AddRedisCache();
 builder.Services.AddKernelExtensions();
 builder.Services.AddFunctionalExtensions();
@@ -108,8 +139,8 @@ builder.Services.AddDbContext<DbContext, ApplicationDatabaseContext>();
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.Configure<CacheSettings>(configuration.GetSection(nameof(CacheSettings)));
 
-var app = builder.Build();
 
+var app = builder.Build();
 app.ApplyMigrations();
 
 app.UseSwagger();

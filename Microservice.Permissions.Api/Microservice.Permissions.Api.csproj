@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Microservice.Permissions.Azure.Bus\Microservice.Permissions.Azure.Bus.csproj" />
         <ProjectReference Include="..\Microservice.Permissions.Core\Microservice.Permissions.Core.csproj" />
         <ProjectReference Include="..\Microservice.Permissions.Messaging\Microservice.Permissions.Messaging.csproj" />
     </ItemGroup>

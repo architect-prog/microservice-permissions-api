@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Pe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Messaging", "Microservice.Permissions.Messaging\Microservice.Permissions.Messaging.csproj", "{F8BE2C1C-89E4-4A33-9A09-E884218BE022}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Permissions.Azure.Bus", "Microservice.Permissions.Azure.Bus\Microservice.Permissions.Azure.Bus.csproj", "{D977112A-A831-42C5-8A8D-1054765848DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,5 +55,9 @@ Global
 		{F8BE2C1C-89E4-4A33-9A09-E884218BE022}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8BE2C1C-89E4-4A33-9A09-E884218BE022}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8BE2C1C-89E4-4A33-9A09-E884218BE022}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D977112A-A831-42C5-8A8D-1054765848DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D977112A-A831-42C5-8A8D-1054765848DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D977112A-A831-42C5-8A8D-1054765848DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D977112A-A831-42C5-8A8D-1054765848DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

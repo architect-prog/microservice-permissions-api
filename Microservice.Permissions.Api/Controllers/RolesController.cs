@@ -2,9 +2,12 @@
 using ArchitectProg.WebApi.Extensions.Extensions;
 using ArchitectProg.WebApi.Extensions.Responses;
 using Microservice.Permissions.Api.Extensions;
+using Microservice.Permissions.Azure.Bus.Contracts;
+using Microservice.Permissions.Azure.Bus.Services.Interfaces;
 using Microservice.Permissions.Core.Contracts.Requests.Role;
 using Microservice.Permissions.Core.Contracts.Responses.Role;
 using Microservice.Permissions.Core.Services.Interfaces;
+using Microservice.Permissions.Messaging.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservice.Permissions.Api.Controllers;
@@ -14,10 +17,17 @@ namespace Microservice.Permissions.Api.Controllers;
 public sealed class RolesController : ControllerBase
 {
     private readonly IRoleService roleService;
+    private readonly IBusMessagePublisher busMessagePublisher;
+    private readonly IAzureBusMessagePublisher azureBusMessagePublisher;
 
-    public RolesController(IRoleService roleService)
+    public RolesController(
+        IRoleService roleService,
+        IBusMessagePublisher busMessagePublisher,
+        IAzureBusMessagePublisher azureBusMessagePublisher)
     {
         this.roleService = roleService;
+        this.busMessagePublisher = busMessagePublisher;
+        this.azureBusMessagePublisher = azureBusMessagePublisher;
     }
 
     [ProducesBadRequest]
@@ -26,7 +36,7 @@ public sealed class RolesController : ControllerBase
     public async Task<IActionResult> Create(CreateRoleRequest request)
     {
         var result = await roleService.Create(request);
-        var response = result.MatchActionResult(x => CreatedAtAction("Get", new {RoleId = x?.Id}, x));
+        var response = result.MatchActionResult(x => CreatedAtAction("Get", new { RoleId = x?.Id }, x));
 
         return response;
     }
@@ -39,6 +49,12 @@ public sealed class RolesController : ControllerBase
         var result = await roleService.Get(roleId);
         var response = result.MatchActionResult(x => Ok(x));
 
+        await azureBusMessagePublisher.PublishMessage(new BusMessage<int>
+        {
+            Queue = "send.email",
+            Payload = 1
+        });
+
         return response;
     }
 
@@ -49,6 +65,13 @@ public sealed class RolesController : ControllerBase
     {
         var result = await roleService.GetAll(skip, take);
         var count = await roleService.Count();
+
+        await busMessagePublisher.PublishMessage(new Messaging.Contracts.BusMessage<int>
+        {
+            Exchange = "email",
+            Queue = "send.email",
+            Payload = 1
+        });
 
         var response = result.MatchActionResult(x => Ok(x?.WrapCollection(count)));
         return response;
