@@ -44,9 +44,20 @@ public sealed class ChannelProvider : IChannelProvider
 
     public void Dispose()
     {
-        if (connection.IsValueCreated)
-            Connection.Dispose();
         if (channel.IsValueCreated)
+        {
+            if (Channel.IsOpen)
+                Channel.Close();
+
             Channel.Dispose();
+        }
+
+        if (connection.IsValueCreated)
+        {
+            if (Connection.IsOpen)
+                Channel.Close();
+
+            Connection.Dispose();
+        }
     }
 }
